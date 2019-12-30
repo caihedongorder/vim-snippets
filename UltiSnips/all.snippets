@@ -110,4 +110,81 @@ snippet uuid "Random UUID" w
 `!p if not snip.c: import uuid; snip.rv = str(uuid.uuid4())`
 endsnippet
 
+###########################################################################
+#                                快速括号                                 #
+###########################################################################
+
+############
+#  圆括号  #
+############
+
+snippet "\.p" "Parenthesis (postfix)" r
+($1)$0
+endsnippet
+
+############
+#  方括号  #
+############
+snippet "\.s" "Parenthesis (postfix)" r
+[$1]$0
+endsnippet
+
+############
+#  双引号  #
+############
+snippet "\.q" "Parenthesis (postfix)" r
+"$1"$0
+endsnippet
+
+############
+#  尖括号  #
+############
+snippet "\.a" "Parenthesis (postfix)" r
+{$1}$0
+endsnippet
+
+#####################
+#  带$前缀的尖括号  #
+#####################
+
+snippet "\.ad" "Parenthesis (postfix)" r
+${$1:$2}$0
+endsnippet
+
+############
+#  反引号  #
+############
+
+snippet ".r" "Parenthesis (postfix)" r
+\`$1\`$0
+endsnippet
+
+############
+#    ==    #
+############
+
+snippet "eq" "" r
+==$0
+endsnippet
+
+############
+#    !=    #
+############
+snippet "neq" "" r
+!=$0
+endsnippet
+
+############
+#     +    #
+############
+snippet "a" "" r
++$0
+endsnippet
+############
+#     s    #
+############
+snippet "s" "" r
+-$0
+endsnippet
+
 # vim:ft=snippets:

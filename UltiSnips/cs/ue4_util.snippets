@@ -1,0 +1,22 @@
+
+#######################################################################
+#                          ue4 util snippets                          #
+#######################################################################
+
+#################
+#  uelog class  #
+#################
+
+snippet ul "" b
+UELog.Log(\$"${1}");${0}
+endsnippet
+
+snippet ule "" b
+UELog.LogError(\$"${1}");${0}
+endsnippet
+
+snippet ulw "UELog." b
+UELog.LogWarning(\$"${1}");${0}
+endsnippet
+
+

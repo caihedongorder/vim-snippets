@@ -1,0 +1,523 @@
+# cs.snippets
+# ===========
+#
+# Standard C-Sharp snippets for snipmate.
+#
+# Largely ported over from Visual Studio 2010 snippets plus
+# a few snippets from Resharper plus a few widely known snippets.
+#
+# Most snippets on elements (i.e. classes, properties)
+# follow suffix conventions. The order of suffixes to a snippet
+# is fixed.
+#
+# Snippet Suffix Order
+# --------------------
+# 1. Access Modifiers
+# 2. Class Modifiers
+#
+# Access Modifier Suffix Table
+# ----------------------------
+# + = public
+# & = internal
+# | = protected
+# - = private
+#
+# Example: `cls&` expands to `internal class $1`.
+# Access modifiers might be doubled to indicate
+# different modifiers for get/set on properties.
+# Example: `pb+-` expands to `public bool $1 { get; private set; }`
+#
+# Class Modifier Table
+# --------------------
+# ^ = static
+# % = abstract
+#
+# Example: `cls|%` expands to `protected abstract class $1`
+#
+# On method and property snippets, you can directly set
+# one of the common types int, string and bool, if desired,
+# just by appending the type modifier.
+#
+# Type Modifier Table
+# -------------------
+# i = integer
+# s = string
+# b = bool
+#
+# Example: `pi+&` expands to `public int $1 { get; internal set; }`
+#
+# I'll most propably add more stuff in here like
+# * List/Array constructio
+# * Mostly used generics
+# * Linq
+# * Funcs, Actions, Predicates
+# * Lambda
+# * Events
+#
+# Feedback is welcome!
+#
+# Main
+snippet sim
+${1:public} static int Main(string[] args)
+{
+	${0}
+	return 0;
+}
+endsnippet
+snippet simc
+public class Application
+{
+	${1:public} static int Main(string[] args)
+	{
+		${0}
+		return 0;
+	}
+}
+endsnippet
+snippet svm
+${1:public} static void Main(string[] args)
+{
+	${0}
+}
+endsnippet
+# if condition
+snippet if
+if (${1:true})
+{
+	${0:${VISUAL}}
+}
+endsnippet
+snippet el
+else
+{
+	${0:${VISUAL}}
+}
+endsnippet
+snippet ifs
+if (${1})
+	${0:${VISUAL}}
+endsnippet
+# ternary conditional
+snippet t
+${1} ? ${2} : ${0}
+endsnippet
+snippet ?
+${1} ? ${2} : ${0}
+endsnippet
+# do while loop
+snippet do
+do
+{
+	${0:${VISUAL}}
+} while (${1:true});
+endsnippet
+# while loop
+snippet wh
+while (${1:true})
+{
+	${0:${VISUAL}}
+}
+endsnippet
+# for loop
+snippet for
+for (int ${1:i} = 0; $1 < ${2:count}; $1${3:++})
+{
+	${0}
+}
+endsnippet
+snippet forr
+for (int ${1:i} = ${2:length}; $1 >= 0; $1--)
+{
+	${0}
+}
+endsnippet
+# foreach
+snippet fore
+foreach (${1:var} ${2:entry} in ${3})
+{
+	${0}
+}
+endsnippet
+snippet foreach
+foreach (${1:var} ${2:entry} in ${3})
+{
+	${0}
+}
+endsnippet
+snippet each
+foreach (${1:var} ${2:entry} in ${3})
+{
+	${0}
+}
+endsnippet
+# interfaces
+snippet interface
+public interface ${1:`vim_snippets#Filename()`}
+{
+	${0}
+}
+endsnippet
+snippet if+
+public interface ${1:`vim_snippets#Filename()`}
+{
+	${0}
+}
+endsnippet
+# class bodies
+snippet cls
+${2:public} class ${1:`vim_snippets#Filename()`}
+{
+	${0}
+}
+endsnippet
+# constructor
+snippet ctor
+public ${1:`vim_snippets#Filename()`}()
+{
+	${0}
+}
+endsnippet
+# properties - auto properties by default.
+# default type is int with layout get / set.
+# structure
+snippet struct
+public struct ${1:`vim_snippets#Filename()`}
+{
+	${0}
+}
+endsnippet
+# enumeration
+snippet enum
+enum ${1}
+{
+	${0}
+}
+endsnippet
+
+snippet enum+
+public enum ${1}
+{
+	${0}
+}
+endsnippet
+# preprocessor directives
+snippet #if
+#if
+	${0}
+#endif
+endsnippet
+# inline xml documentation
+snippet ///
+/// <summary>
+/// ${0}
+/// </summary>
+endsnippet
+snippet <p
+<param name="${1}">${2:$1}</param>
+endsnippet
+snippet <ex
+<exception cref="${1:System.Exception}">${2}</exception>
+endsnippet
+snippet <r
+<returns>${1}</returns>
+endsnippet
+snippet <s
+<see cref="${1}"/>
+endsnippet
+snippet <rem
+<remarks>${1}</remarks>
+endsnippet
+snippet <c
+<code>${1}</code>
+endsnippet
+
+snippet cw
+Console.WriteLine(${1});
+endsnippet
+
+# equals override
+snippet eq
+public override bool Equals(object obj)
+{
+	if (obj == null || GetType() != obj.GetType())
+	{
+		return false;
+	}
+	${0:throw new NotImplementedException();}
+	return base.Equals(obj);
+}
+endsnippet
+# exception
+snippet exc
+public class ${1:MyException} : ${2:Exception}
+{
+	public $1() { }
+	public $1(string message) : base(message) { }
+	public $1(string message, Exception inner) : base(message, inner) { }
+	protected $1(
+		System.Runtime.Serialization.SerializationInfo info,
+		System.Runtime.Serialization.StreamingContext context)
+			: base(info, context) { }
+}
+endsnippet
+# indexer
+snippet index
+public ${1:object} this[${2:int} index]
+{
+	get { ${0} }
+	set { ${0} }
+}
+endsnippet
+# eventhandler
+snippet inv
+EventHandler temp = ${1:MyEvent};
+if (${2:temp} != null)
+{
+	$2();
+}
+endsnippet
+# lock
+snippet lock
+lock (${1:this})
+{
+	${0}
+}
+endsnippet
+# namespace
+snippet ns
+namespace ${1:MyNamespace}
+{
+	${0}
+}
+endsnippet
+# switch
+snippet switch
+switch (${1:switch_on})
+{
+	${0}
+	default:
+}
+endsnippet
+# try
+snippet try
+try
+{
+	${0:${VISUAL}}
+}
+catch (${1:System.Exception})
+{
+	throw;
+}
+endsnippet
+snippet tryf
+try
+{
+	${0:${VISUAL}}
+}
+finally
+{
+	${1}
+}
+endsnippet
+# using
+snippet usi
+using (${1:resource})
+{
+	${0}
+}
+endsnippet
+
+
+#######################################################################
+#                             c# property                             #
+#######################################################################
+global !p
+def cs_gettype(shorttype):
+	if shorttype == "v":
+		return "void"
+	if shorttype == "sb":
+		return "sbyte"
+	elif shorttype == "b":
+		return "byte"
+	elif shorttype == "sh":
+		return "short"
+	elif shorttype == "us":
+		return "ushort"
+	elif shorttype == "i":
+		return "int"
+	elif shorttype == "ui":
+		return "uint"
+	elif shorttype == "l":
+		return "long"
+	elif shorttype == "ul":
+		return "ulong"
+	elif shorttype == "f":
+		return "float"
+	elif shorttype == "d":
+		return "double"
+	elif shorttype == "s":
+		return "string"
+	elif shorttype == "img":
+		return "UImage"
+	elif shorttype == "btn":
+		return "UButton"
+	elif shorttype == "sli":
+		return "USlider"
+	elif shorttype == "combo":
+		return "UComboBox"
+	elif shorttype == "prog":
+		return "UProgressBar"
+	else:
+		if isinstance(shorttype,str) and len(shorttype) > 1:
+			if shorttype[0] == 'l' : 
+				elemType = cs_gettype(shorttype[2:])
+				return "List<"+ elemType + ">"
+			elif shorttype[0] == 'd' :
+				keyValueStr = shorttype[2:]
+				strkeyElemType,strValueElelType = keyValueStr.split('.',1)
+				keyElemType = cs_gettype(strkeyElemType)
+				valueElemType = cs_gettype(strValueElelType)
+				print(keyElemType,valueElemType)
+				return "Dictionary< " + keyElemType + " , " + valueElemType + " >"
+			
+	return shorttype
+def cs_getTypePrefix(shorttype):
+	if shorttype == "img":
+		return "Image_"
+	elif shorttype == "btn":
+		return "Button_"
+	elif shorttype == "sli":
+		return "Slider_"
+	elif shorttype == "combo":
+		return "ComboBox_"
+	elif shorttype == "prog":
+		return "Progressbar_"
+	return ""
+def cs_getAccessString(shortAccessStr):
+	if shortAccessStr == "p":
+		return "public"
+	elif shortAccessStr == "r":
+		return "protected"
+	elif shortAccessStr == "i":
+		return "private"
+	return "public"
+def cs_getFuncParams(shorttype):
+	params = shorttype.split('.')
+	if len(params) == 2 :
+		funcName = params[0]
+		retValue = cs_gettype( params[1] )
+		return retValue + " " + funcName + "()"
+	elif len(params) > 2 :
+		funcName = params[0]
+		retValue = cs_gettype( params[1] )
+		strParams = "("
+		startIdx = 2
+		while startIdx + 1 < len(params) :
+			strParamType = cs_gettype(params[startIdx])
+			strParamName = params[startIdx + 1]
+			strParams += strParamType + " " + strParamName;
+			startIdx = startIdx + 2
+			if startIdx + 1 < len(params) :
+				strParams += ","
+		strParams += ")"
+		return retValue + " " + funcName + strParams
+	return shorttype
+endglobal
+
+
+######################
+#  property snippet  #
+######################
+snippet "\bp\.([a-zA-Z_\.]+)\b" "" r
+public `!p snip.rv = cs_gettype(match.group(1))` `!p snip.rv = cs_getTypePrefix(match.group(1))`${2:propName} { get; set; }
+endsnippet
+
+######################
+#  variable snippet  #
+######################
+snippet "\bva([pri]?)\.([a-zA-Z_.]+)\b" "" r
+`!p snip.rv = cs_getAccessString(match.group(1))` `!p snip.rv = cs_gettype(match.group(2))` `!p snip.rv = cs_getTypePrefix(match.group(2))`${2:propName};${0}
+endsnippet
+
+###################
+#  class snippet  #
+###################
+snippet "\bc([pri]?)\.([a-zA-Z_.]+)\b" "" r
+`!p snip.rv = cs_getAccessString(match.group(1))` class `!p snip.rv = match.group(2)`
+{
+	${1}
+}${0}
+endsnippet
+
+##########################################
+#  for quickly to generate functionSnip  #
+##########################################
+
+snippet "\bf" "" r
+${1:f}.${2:funcName}.${3:v}${0}
+endsnippet
+
+snippet "\bf1" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}${0}
+endsnippet
+
+snippet "\bf2" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}${0}
+endsnippet
+
+snippet "\bf3" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}${0}
+endsnippet
+
+snippet "\bf4" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}${0}
+endsnippet
+
+snippet "\bf5" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}.${10:type}.${11:Name}${0}
+endsnippet
+
+snippet "\bf6" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}.${10:type}.${11:Name}.${12:type}.${13:Name}${0}
+endsnippet
+
+snippet "\bf7" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}.${10:type}.${11:Name}.${12:type}.${13:Name}.${14:type}.${15:Name}${0}
+endsnippet
+
+snippet "\bf8" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}.${10:type}.${11:Name}.${12:type}.${13:Name}.${14:type}.${15:Name}.${16:type}.${17:Name}${0}
+endsnippet
+
+snippet "\bf9" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}.${10:type}.${11:Name}.${12:type}.${13:Name}.${14:type}.${15:Name}.${16:type}.${17:Name}.${18:type}.${19:Name}${0}
+endsnippet
+
+snippet "\bf10" "" r
+${1:f}.${2:funcName}.${3:v}.${4:type}.${5:Name}.${6:type}.${7:Name}.${8:type}.${9:Name}.${10:type}.${11:Name}.${12:type}.${13:Name}.${14:type}.${15:Name}.${16:type}.${17:Name}.${18:type}.${19:Name}.${20:type}.${21:Name}${0}
+endsnippet
+
+#######################
+#  function snippets  #
+#######################
+
+snippet "\bf([pri]?)\.([a-zA-Z_.]+)\b" "" r
+`!p snip.rv = cs_getAccessString(match.group(1))` `!p snip.rv = cs_getFuncParams( match.group(2) )`
+{
+	${1}
+}${0}
+endsnippet
+
+
+# public int propName { get; set; } 
+# public byte propName { get; set; }
+
+# public ushort propName { get; set; }
+# public short propName { get; set; }
+# public int propName { get; set; }
+# public uint propName { get; set; }
+# public long propName { get; set; }
+# public ulong propName { get; set; }
+# public float propName { get; set; }
+# public double propName { get; set; }
+
