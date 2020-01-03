@@ -19,4 +19,105 @@ snippet ulw "UELog." b
 UELog.LogWarning(\$"${1}");${0}
 endsnippet
 
+snippet ctor "构造函数" b
+public ${2:`!p snip.rv = snip.basename`}(){
 
+}
+endsnippet
+
+#################
+#  logic class  #
+#################
+
+snippet ucl "ue4 logic class" b
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+//
+// 模块名：$1
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${3:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game.${1:spaceName}
+{
+	public class ${2:`!p snip.rv = snip.basename`}
+	{
+		/// <summary>
+		/// 订阅事件
+		/// </summary>
+		public void AddEventListeners()
+		{
+			${0}		
+		}
+		/// <summary>
+		/// 取消订阅事件
+		/// </summary>
+		public void RemoveEventListeners()
+		{
+				
+		}
+	}
+}
+endsnippet
+
+#############################
+#  ue4 actor class snippet  #
+#############################
+
+
+snippet uca "ue4 logic class" b
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+//
+// 模块名：$1
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${2:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game
+{
+	public class A${1:`!p snip.rv = snip.basename`} : AActor
+	{
+		${0}		
+	}
+}
+endsnippet
+
+
+snippet u.event.add "AddEventListener" b
+EventDispatcher.AddEventListener(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
+endsnippet
+
+snippet u.event.remove "RemoveEventListener" b
+EventDispatcher.RemoveEventListener(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
+endsnippet
+
+snippet u.statics.getplayerpawn "GetPlayerPawn" b
+${playPawn:1} = UGameplayStatics.GetPlayerPawn(${2:SceneManager.Instance.GameIns},0) as APlayerPawnBase;$0
+endsnippet
+
+snippet u.timer.ladd "增加局部定时器" b
+TimerMgr.Instance.AddLocalTimer(${1:0.01f},${2:false},()=>
+{
+	$0
+});
+endsnippet
+
+snippet u.timer.sadd "增加特殊定时器" b
+TimerMgr.Instance.AddSpecialTimer(${1:0.01f},()=>
+{
+	$0
+});
+endsnippet
+
+snippet u.actor.setloc "设置物件位置" b
+${1:actor}.K2_SetActorLocation(${2:loc},false,null,true);$0
+endsnippet

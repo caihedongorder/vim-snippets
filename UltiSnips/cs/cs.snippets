@@ -335,9 +335,11 @@ global !p
 def cs_gettype(shorttype):
 	if shorttype == "v":
 		return "void"
+	elif shorttype == "b":
+		return "bool"
 	if shorttype == "sb":
 		return "sbyte"
-	elif shorttype == "b":
+	elif shorttype == "by":
 		return "byte"
 	elif shorttype == "sh":
 		return "short"
@@ -424,19 +426,31 @@ def cs_getFuncParams(shorttype):
 	return shorttype
 endglobal
 
+################
+#  assignment  #
+################
+snippet "\bass\.(\w+)" "assignment" r
+this.${1:`!p snip.rv = match.group(1)`} = $1;$0
+endsnippet
 
 ######################
 #  property snippet  #
 ######################
 snippet "\bp\.([a-zA-Z_\.]+)\b" "" r
-public `!p snip.rv = cs_gettype(match.group(1))` `!p snip.rv = cs_getTypePrefix(match.group(1))`${2:propName} { get; set; }
+public `!p snip.rv = cs_gettype(match.group(1))` `!p snip.rv = cs_getTypePrefix(match.group(1))`${1:propName} { get; set; }${0}
 endsnippet
 
 ######################
 #  variable snippet  #
 ######################
 snippet "\bva([pri]?)\.([a-zA-Z_.]+)\b" "" r
-`!p snip.rv = cs_getAccessString(match.group(1))` `!p snip.rv = cs_gettype(match.group(2))` `!p snip.rv = cs_getTypePrefix(match.group(2))`${2:propName};${0}
+`!p snip.rv = cs_getAccessString(match.group(1))` `!p snip.rv = cs_gettype(match.group(2))` `!p snip.rv = cs_getTypePrefix(match.group(2))`${1:propName};${0}
+endsnippet
+######################
+#  variable snippet  #
+######################
+snippet "\bvn([pri]?)\.([a-zA-Z_.]+)\b" "" r
+`!p snip.rv = cs_getAccessString(match.group(1))` ${1:`!p snip.rv = cs_gettype(match.group(2))`} `!p snip.rv = cs_getTypePrefix(match.group(2))`${2:propName} = new $1();${0}
 endsnippet
 
 ###################
@@ -448,6 +462,7 @@ snippet "\bc([pri]?)\.([a-zA-Z_.]+)\b" "" r
 	${1}
 }${0}
 endsnippet
+
 
 ##########################################
 #  for quickly to generate functionSnip  #

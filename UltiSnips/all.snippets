@@ -99,9 +99,12 @@ snippet datetime "YYYY-MM-DD hh:mm" w
 `!v strftime("%Y-%m-%d %H:%M")`
 endsnippet
 
+
 snippet todo "TODO comment" bw
-`!p snip.rv=get_comment_format()[0]` ${2:TODO}: $0${3: <${4:`!v strftime('%d-%m-%y')`}${5:, `!v g:snips_author`}>} `!p snip.rv=get_comment_format()[2]`
+`!p snip.rv=get_comment_format()[0]` TODO:${2:Content}`!p snip.rv=get_comment_format()[2]`
+`!p snip.rv=get_comment_format()[0]` <创建时间:`!v strftime('%d-%m-%y')`, `!v g:snips_author`> `!p snip.rv=get_comment_format()[2]`
 endsnippet
+
 
 ##########
 #  Misc  #
@@ -186,5 +189,6 @@ endsnippet
 snippet "s" "" r
 -$0
 endsnippet
+
 
 # vim:ft=snippets:
