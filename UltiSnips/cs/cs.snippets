@@ -436,22 +436,25 @@ endsnippet
 ######################
 #  property snippet  #
 ######################
-snippet "\bp\.([a-zA-Z_\.]+)\b" "" r
+snippet "\bprop\.([a-zA-Z_\.]+)\b" "define a property" r
 public `!p snip.rv = cs_gettype(match.group(1))` `!p snip.rv = cs_getTypePrefix(match.group(1))`${1:propName} { get; set; }${0}
 endsnippet
+
 
 ######################
 #  variable snippet  #
 ######################
-snippet "\bva([pri]?)\.([a-zA-Z_.]+)\b" "" r
+snippet "\bvar([pri]?)\.([a-zA-Z_.]+)\b" "define a variable" r
 `!p snip.rv = cs_getAccessString(match.group(1))` `!p snip.rv = cs_gettype(match.group(2))` `!p snip.rv = cs_getTypePrefix(match.group(2))`${1:propName};${0}
 endsnippet
 ######################
 #  variable snippet  #
 ######################
-snippet "\bvn([pri]?)\.([a-zA-Z_.]+)\b" "" r
-`!p snip.rv = cs_getAccessString(match.group(1))` ${1:`!p snip.rv = cs_gettype(match.group(2))`} `!p snip.rv = cs_getTypePrefix(match.group(2))`${2:propName} = new $1();${0}
+snippet "\bvarn([pri]?)\.([a-zA-Z_.]+)\b" "define a variable and new" r
+`!p snip.rv = cs_getAccessString(match.group(1))` `!p snip.rv = cs_gettype(match.group(2))` `!p snip.rv = cs_getTypePrefix(match.group(1))`${2:propName} = new `!p snip.rv = cs_gettype(match.group(2))`();${0}
 endsnippet
+
+
 
 ###################
 #  class snippet  #
@@ -523,6 +526,151 @@ snippet "\bf([pri]?)\.([a-zA-Z_.]+)\b" "" r
 }${0}
 endsnippet
 
+#######################################################################
+#                           string snippets                           #
+#######################################################################
+
+snippet s.def "define a string" b
+${1:result} = "${2:string}";
+$0
+endsnippet
+
+snippet s.if "check if str1 str2 is equal" w
+if(${1:str1}${2:==}${3:str2})
+{
+	$0
+}
+endsnippet
+
+snippet s.concat "string concat" w
+${1:result} = ${2:str1} + ${3:str2};
+$0
+endsnippet
+
+snippet s.copy "string copy" w
+${1:result} = String.copy(${2:str2Copy});
+endsnippet
+
+snippet s.format "string format" w
+\$"$1"$0
+endsnippet
+
+snippet "([\w.()]+)\.s" "Description" r
+`!p snip.rv = match.group(1) + ':' "{ " + match.group(1) + " }"`$0
+endsnippet
+
+snippet s.sub "get sub string" b
+${1:result} = ${2:str}.Substring( ${3:startIndex} , ${4: count} );$0
+endsnippet
+
+
+snippet s.containt "check if string containt substr" w
+String.Containt(${2:subStr})
+endsnippet
+
+snippet s.startswith "check if string end with" w
+${1:str}.StartsWith( ${2:startStr} )
+endsnippet
+snippet s.endswith "check if string end with" w
+${1:str}.EndsWith(${2:endStr})
+endsnippet
+
+snippet s.index "indexof substr or char" w
+${1:str}.IndexOf( ${2:subStrOfChar} )
+endsnippet
+
+snippet s.lastindex "lastindexof substr or char" w
+${1:str}.LastIndexOf( ${2:subStrOfChar} )
+endsnippet
+
+snippet s.join "string join" b
+${1:result} = String.Join( '${2:sep}' , ${3:strArr} );
+$0
+endsnippet
+
+snippet s.remove "string remove" w
+${1:result} = ${2:str}.Remove( ${3:start} , ${4:count} );
+endsnippet
+
+snippet s.upper "convert string to upper" w
+${1:result} = ${2:str}.ToUpper(); 
+$0
+endsnippet
+
+snippet s.lower "convert string to upper" w
+${1:result} = ${2:str}.ToLower(); 
+$0
+endsnippet
+
+snippet s.trim "trim a string" w
+${1:result} = ${2:str}.Trim();
+$0
+endsnippet
+
+snippet s.split "split a string into an array" b
+${1:result} = ${2:str}.Split( '${3:,}' , ${4:maxCount} );
+$0
+endsnippet
+
+snippet s.reg "string sample" b
+/*
+private static void showMatch(string text, string expr)
+{
+	Console.WriteLine("The Expression: " + expr);
+	MatchCollection mc = Regex.Matches(text, expr);
+	foreach (Match m in mc)
+	{
+		Console.WriteLine(m);
+	}
+}
+static void Main(string[] args)
+{
+	string str = "make maze and manage to measure it";
+	
+	Console.WriteLine("Matching words start with 'm' and ends with 'e':");
+	showMatch(str, @"\bm\S*e\b");
+	Console.ReadKey();
+}
+*/
+endsnippet
+
+
+#######################################################################
+#                            array snippet                            #
+#######################################################################
+snippet arr.def "define an array" b
+${1:int}[] ${2:arrName} = new $1[${3:count}]
+{
+	$4
+};
+$0
+endsnippet
+
+# string[] arrName = new # string[]
+# {
+#     "test1",
+#     "test2",
+#     "test3",
+# };
+
+snippet arr.for "arr forloop" b
+for (int ${1:index} = 0; $1 < ${2:arr}.Length; $1++)
+{
+	var ${3:element} = $2[$1];
+	${VISUAL}
+	$3
+}
+$0
+endsnippet
+
+snippet arr.foreach "arr for each" b
+foreach (var ${1:element} in ${2:arr})
+{
+	${VISUAL}
+	$3
+}
+$0
+endsnippet
 
 
 
