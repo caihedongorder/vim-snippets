@@ -68,34 +68,26 @@ endsnippet
 #                            list snippet                             #
 #######################################################################
 
-
 snippet list.def "define a list" b
 let ${1:l}:${2:varName} = []
 $0
 endsnippet
 
+snippet list.cop "list copy" w
+let ${1:listCopied} = copy( ${2:list2Copy} )
+$0
+endsnippet
+
+snippet list.dee "list deepcopy" w
+let ${1:listCopied} = deepcopy( ${2:list2Copy} )
+endsnippet
+
+###################
+#  add operation  #
+###################
+
 snippet list.add "list add an element" b
 call add( ${1:list} , ${2:element} )
-$0
-endsnippet
-
-snippet list.rem "list remove" b
-call remove( ${1:list} , ${2:start} , ${3:end} )
-$0
-endsnippet
-
-snippet list.len "list add an element" b
-let ${1:nums} = len( ${2:list} )
-$0
-endsnippet
-
-snippet list.get "list add an element" w
-let ${1:var} = get( ${2:list} , ${3:idx} , ${4:DefaultValue} ) $0
-$0
-endsnippet
-
-snippet list.ise "check if a list is empty" w
-empty( ${1:list} )
 $0
 endsnippet
 
@@ -109,32 +101,24 @@ call extend( ${1:list2Add} ,${2:otherlist})
 $0
 endsnippet
 
-snippet list.cop "list copy" w
-let ${1:listCopied} = copy( ${2:list2Copy} )
+####################
+#  find operation  #
+####################
+
+snippet list.len "list add an element" b
+let ${1:nums} = len( ${2:list} )
 $0
 endsnippet
 
-snippet list.dee "list deepcopy" w
-let ${1:listCopied} = deepcopy( ${2:list2Copy} )
-endsnippet
-
-snippet list.sor "list sort" w
-call sort( ${1:list2Add} ${2:,func} )
+snippet list.get "list add an element" w
+let ${1:var} = get( ${2:list} , ${3:idx} , ${4:DefaultValue} ) $0
 $0
 endsnippet
 
-snippet list.rev "list sort" w
-call reverse( ${1:list2Add} )
-$0
-endsnippet
 
-snippet list.joi "list join" b
-let ${1:joinedStr} = join(${2:listToJoin},${3:sep})
+snippet list.ise "check if a list is empty" w
+empty( ${1:list} )
 $0
-endsnippet
-
-snippet list.ran "list range" b
-let ${1:list} = range( ${2:start}, ${3:end}, ${4:step} )
 endsnippet
 
 snippet list.ind "list index" b
@@ -157,8 +141,17 @@ let ${1:nums} = count( ${2:list} ,${3:pat} , ${4:start} , ${5:step} )
 $0
 endsnippet
 
-snippet list.rep "list repeat" b
-let ${1:list} = repeat( ${2:listOrString} , ${3:count} )
+######################
+#  change operation  #
+######################
+
+snippet list.sor "list sort" w
+call sort( ${1:list2Add} ${2:,func} )
+$0
+endsnippet
+
+snippet list.rev "list sort" w
+call reverse( ${1:list2Add} )
 $0
 endsnippet
 
@@ -170,6 +163,31 @@ endsnippet
 snippet list.fil "list filter" b
 call filter(${1:list} , ${2:condition})
 endsnippet
+
+snippet list.rep "list repeat" b
+let ${1:list} = repeat( ${2:listOrString} , ${3:count} )
+$0
+endsnippet
+
+######################
+#  remove operation  #
+######################
+
+snippet list.rem "list remove" b
+call remove( ${1:list} , ${2:start} , ${3:end} )
+$0
+endsnippet
+
+
+snippet list.joi "list join" b
+let ${1:joinedStr} = join(${2:listToJoin},${3:sep})
+$0
+endsnippet
+
+snippet list.ran "list range" b
+let ${1:list} = range( ${2:start}, ${3:end}, ${4:step} )
+endsnippet
+
 
 snippet list.str "list string" b
 let ${1:str} = string(${2:list})
