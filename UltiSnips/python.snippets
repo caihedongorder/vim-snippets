@@ -288,6 +288,7 @@ write_init_body(args, t[2], snip)
 endsnippet
 
 
+
 snippet slotclass "class with slots and docstrings" b
 class ${1:MyClass}(${2:object}):
 
@@ -314,6 +315,28 @@ write_init_body(args, t[2], snip)
 `
 		$0
 endsnippet
+
+snippet testClass "class with slots and docstrings" b
+class ${1:MyClass}(${2:object}):
+
+	`!p snip.rv = triple_quotes(snip)`${3:Docstring for $1. }`!p snip.rv = triple_quotes(snip)`
+	def __init__(self$4):
+		`!p snip.rv = triple_quotes(snip)`${5:TODO: to be defined.}`!p
+snip.rv = ""
+snip >> 2
+
+args = get_args(t[4])
+
+write_docstring_args(args, snip)
+if args:
+	snip.rv += '\n' + snip.mkline('', indent='')
+	snip += triple_quotes(snip)
+
+write_init_body(args, t[2], snip)
+`
+		$0
+endsnippet
+
 
 
 snippet contain "methods for emulating a container type" b

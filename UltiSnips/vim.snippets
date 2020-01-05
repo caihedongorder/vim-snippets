@@ -1,12 +1,31 @@
 priority -50
 
-###########################################################################
-#                            SnipMate Snippets                            #
-###########################################################################
-snippet gvar "Global / configuration variable" b
+#######################################################################
+#                           for if while...                           #
+#######################################################################
+snippet for "for statement" b
+for ${1:condition}
+	${VISUAL}
+endfor
+$0
+endsnippet
+
+snippet if "if ... endif" b
+if ${1:condition}
+	${VISUAL}
+endif
+$0
+endsnippet
+
+
+snippet var.g "Global / configuration variable" b
 if !exists("g:${1:MyUltraImportantVar}")
 	let g:$1 = ${2:"${3:<tab>}"}
 endif
+endsnippet
+
+snippet var.l "Local Variable" b
+let l:$1 = $0
 endsnippet
 
 snippet guard "script reload guard" b
@@ -17,12 +36,145 @@ let $1 = 1$3
 endsnippet
 
 snippet f "function" b
-fun ${1:function_name}($2)
+fun! s:${1:function_name}($2)
 	${3:" code}
 endf
 endsnippet
 snippet autoc "function" w
 :call MyVimrc_AutoRecordNormalCommand('$1')<CR>:${1:cmd}<CR>${0}
 endsnippet
+
+snippet cmd.group "auto command group" b
+augroup $1_commands
+	autocmd!
+	$0
+augroup END
+endsnippet
+
+snippet cmd.filetype "auto command file type" b
+autocmd FileType ${1:pattern} ${2:command}
+$0
+endsnippet
+
+#######################################################################
+#                           string snippets                           #
+#######################################################################
+snippet str.spl "string split" b
+let ${1:splitedList} = split( str , ${2:','})
+$0
+endsnippet
+
+#######################################################################
+#                            list snippet                             #
+#######################################################################
+
+
+snippet list.def "define a list" b
+let ${1:l}:${2:varName} = []
+$0
+endsnippet
+
+snippet list.add "list add an element" b
+call add( ${1:list} , ${2:element} )
+$0
+endsnippet
+
+snippet list.rem "list remove" b
+call remove( ${1:list} , ${2:start} , ${3:end} )
+$0
+endsnippet
+
+snippet list.len "list add an element" b
+let ${1:nums} = len( ${2:list} )
+$0
+endsnippet
+
+snippet list.get "list add an element" w
+let ${1:var} = get( ${2:list} , ${3:idx} , ${4:DefaultValue} ) $0
+$0
+endsnippet
+
+snippet list.ise "check if a list is empty" w
+empty( ${1:list} )
+$0
+endsnippet
+
+snippet list.ins "insert an element to a list" w
+call insert( ${1:list} ,${2:element} ${3:,idx})
+$0
+endsnippet
+
+snippet list.app "append a list to other list" w
+call extend( ${1:list2Add} ,${2:otherlist})
+$0
+endsnippet
+
+snippet list.cop "list copy" w
+let ${1:listCopied} = copy( ${2:list2Copy} )
+$0
+endsnippet
+
+snippet list.dee "list deepcopy" w
+let ${1:listCopied} = deepcopy( ${2:list2Copy} )
+endsnippet
+
+snippet list.sor "list sort" w
+call sort( ${1:list2Add} ${2:,func} )
+$0
+endsnippet
+
+snippet list.rev "list sort" w
+call reverse( ${1:list2Add} )
+$0
+endsnippet
+
+snippet list.joi "list join" b
+let ${1:joinedStr} = join(${2:listToJoin},${3:sep})
+$0
+endsnippet
+
+snippet list.ran "list range" b
+let ${1:list} = range( ${2:start}, ${3:end}, ${4:step} )
+endsnippet
+
+snippet list.ind "list index" b
+let ${1:index} = index( ${2:list} , ${3:element} )
+$0
+endsnippet
+
+snippet list.max "list max" b
+let ${1:maxValue} = max( ${2:list} )
+$0
+endsnippet
+
+snippet list.min "list max" b
+let ${1:minValue} = min( ${2:list} )
+$0
+endsnippet
+
+snippet list.cou "list count" b
+let ${1:nums} = count( ${2:list} ,${3:pat} , ${4:start} , ${5:step} )
+$0
+endsnippet
+
+snippet list.rep "list repeat" b
+let ${1:list} = repeat( ${2:listOrString} , ${3:count} )
+$0
+endsnippet
+
+snippet list.map "list map" b
+call map(${1:list} , ${2:string})
+$0
+endsnippet
+
+snippet list.fil "list filter" b
+call filter(${1:list} , ${2:condition})
+endsnippet
+
+snippet list.str "list string" b
+let ${1:str} = string(${2:list})
+$0
+endsnippet
+
 
 # vim:ft=snippets:
