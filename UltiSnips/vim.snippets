@@ -59,8 +59,119 @@ endsnippet
 #######################################################################
 #                           string snippets                           #
 #######################################################################
-snippet str.spl "string split" b
-let ${1:splitedList} = split( str , ${2:','})
+snippet s.split "string split" b
+let ${1:splitedList} = split( ${2:str} , ${3:','} )
+$0
+endsnippet
+
+snippet s.split.2 "split a string into two part" b
+let l:${1:splitPos }  = stridx( ${2:string2Split}   ,  '${3:.}'  )
+let l:${4:strLeftPath }  = strpart( $2 , 0 , l:$1 )
+let l:${5:strRightPart }  = strpart( $2 , l:$1+1  )
+$0
+endsnippet
+
+snippet s.split.2.r "split a string into two part reverse" b
+let l:${1:splitPos }  = striidx( ${2:string2Split }   ,  '${3:.}'  )
+let l:${4:strLeftPath }  = strpart( $2 , 0 , l:$1 )
+let l:${5:strRightPart }  = strpart( $2 , l:$1+1  )
+$0
+endsnippet
+
+snippet s.len "strlen" b
+let ${1: result }  = strlen( ${2: str } )
+$0
+endsnippet
+
+snippet s.substring "substring" b
+let ${1: result } = strpart( ${2: str } , ${3: startIndex } , ${4: len } )
+$0
+endsnippet
+
+snippet s.repeat "duplicate a string times" b
+let ${1: result } = repeat( ${2: str } , ${3: count } )
+$0
+endsnippet
+
+snippet s.expand "expand a special string" b
+let ${1: result } = expand('${2: :% } ' , ${3: flag } )
+$0
+endsnippet
+
+snippet s.iconv "iconv" b
+let ${1: result } = iconv( ${2: str2Convert } , ${3: from } , ${4: to } )
+$0
+endsnippet
+
+snippet s.eval "eval a value form a string" b
+let ${1: result } = eval( ${2: str2Eval } )
+$0
+endsnippet
+
+
+snippet s.atoi "convert a string to int number" b
+let ${1:result} = str2nr( ${2:str})
+$0
+endsnippet
+
+snippet s.atoi "convert a string to float number" b
+let ${1:result} = str2float( ${2:str})
+$0
+endsnippet
+
+
+snippet s.format "format a stirng" b
+let ${1:result} = printf('${2: format } ' , ${3: argument } )
+$0
+endsnippet
+
+snippet s.escape "escape a string" b
+let ${1: result } = escape( ${2: str2Escape } , ${3: chars } )
+$0
+endsnippet
+
+snippet s.shellescape "escape a string for special char " b
+let ${1: result } = shellescape( ${2: str2Escape } )
+$0
+endsnippet
+
+snippet s.fnameescape "escape a file name" b
+let ${1: result } = fnameescape( ${2: str2Escape } )
+$0
+endsnippet
+
+snippet s.lower "convert a string to lower" b
+let ${1: result } = tolower( ${2: str } )
+$0
+endsnippet
+
+snippet s.upper "convert a string to upper" b
+let ${1: result } = toupper( ${2: str } )
+$0
+endsnippet
+
+snippet s.index "search a substring from begin and return first matched pos" b
+let ${1: result } = stridx( ${2: str } ,${3: substr } ,${4: startIndex } )
+$0
+endsnippet
+
+snippet s.rindex "search a substring from end and return first matched pos" b
+let ${1: result } = strridx( ${2: str } ,${3: substr } ,${4: startIndex } )
+$0
+endsnippet
+
+snippet s.reg.match "reg search a pat from begin, return matched index" b
+let ${1: result } = match( ${2: str } , ${3: pat }  , ${4: startIndex } , ${5: count } )
+$0
+endsnippet
+
+snippet s.reg.matchend "reg search a pat return matched string" b
+let ${1: result } = matchend( ${2: str } , ${3: pat }  , ${4: startIndex } , ${5: count } )
+$0
+endsnippet
+
+snippet s.reg.substitute "substitute sub string" b
+let ${1: result } = substitute( ${2: str } , ${3: pat } , ${4: substr } , '${5:g} ')
 $0
 endsnippet
 
@@ -68,17 +179,17 @@ endsnippet
 #                            list snippet                             #
 #######################################################################
 
-snippet list.def "define a list" b
+snippet l.def "define a list" b
 let ${1:l}:${2:varName} = []
 $0
 endsnippet
 
-snippet list.cop "list copy" w
+snippet l.copy "list copy" w
 let ${1:listCopied} = copy( ${2:list2Copy} )
 $0
 endsnippet
 
-snippet list.dee "list deepcopy" w
+snippet l.deepcopy "list deepcopy" w
 let ${1:listCopied} = deepcopy( ${2:list2Copy} )
 endsnippet
 
@@ -86,17 +197,22 @@ endsnippet
 #  add operation  #
 ###################
 
-snippet list.add "list add an element" b
+snippet l.add "list add an element" b
 call add( ${1:list} , ${2:element} )
 $0
 endsnippet
 
-snippet list.ins "insert an element to a list" w
+snippet l.set "set an element" b
+${1:list}[${2:index}] = ${3:value}
+$0
+endsnippet
+
+snippet l.insert "insert an element to a list" w
 call insert( ${1:list} ,${2:element} ${3:,idx})
 $0
 endsnippet
 
-snippet list.app "append a list to other list" w
+snippet l.extend "append a list to other list" w
 call extend( ${1:list2Add} ,${2:otherlist})
 $0
 endsnippet
@@ -105,38 +221,38 @@ endsnippet
 #  find operation  #
 ####################
 
-snippet list.len "list add an element" b
+snippet l.len "list add an element" b
 let ${1:nums} = len( ${2:list} )
 $0
 endsnippet
 
-snippet list.get "list add an element" w
+snippet l.get "list add an element" w
 let ${1:var} = get( ${2:list} , ${3:idx} , ${4:DefaultValue} ) $0
 $0
 endsnippet
 
 
-snippet list.ise "check if a list is empty" w
+snippet l.empty "check if a list is empty" w
 empty( ${1:list} )
 $0
 endsnippet
 
-snippet list.ind "list index" b
+snippet l.index "list index" b
 let ${1:index} = index( ${2:list} , ${3:element} )
 $0
 endsnippet
 
-snippet list.max "list max" b
+snippet l.max "list max" b
 let ${1:maxValue} = max( ${2:list} )
 $0
 endsnippet
 
-snippet list.min "list max" b
+snippet l.min "list max" b
 let ${1:minValue} = min( ${2:list} )
 $0
 endsnippet
 
-snippet list.cou "list count" b
+snippet l.count "list count" b
 let ${1:nums} = count( ${2:list} ,${3:pat} , ${4:start} , ${5:step} )
 $0
 endsnippet
@@ -145,26 +261,26 @@ endsnippet
 #  change operation  #
 ######################
 
-snippet list.sor "list sort" w
+snippet l.sort "list sort" w
 call sort( ${1:list2Add} ${2:,func} )
 $0
 endsnippet
 
-snippet list.rev "list sort" w
+snippet l.reverse "list sort" w
 call reverse( ${1:list2Add} )
 $0
 endsnippet
 
-snippet list.map "list map" b
+snippet l.map "list map" b
 call map(${1:list} , ${2:string})
 $0
 endsnippet
 
-snippet list.fil "list filter" b
+snippet l.filter "list filter" b
 call filter(${1:list} , ${2:condition})
 endsnippet
 
-snippet list.rep "list repeat" b
+snippet l.repeat "list repeat" b
 let ${1:list} = repeat( ${2:listOrString} , ${3:count} )
 $0
 endsnippet
@@ -173,26 +289,40 @@ endsnippet
 #  remove operation  #
 ######################
 
-snippet list.rem "list remove" b
+snippet l.remove "list remove" b
 call remove( ${1:list} , ${2:start} , ${3:end} )
 $0
 endsnippet
 
 
-snippet list.joi "list join" b
+snippet l.join "list join" b
 let ${1:joinedStr} = join(${2:listToJoin},${3:sep})
 $0
 endsnippet
 
-snippet list.ran "list range" b
+snippet l.range "list range" b
 let ${1:list} = range( ${2:start}, ${3:end}, ${4:step} )
 endsnippet
 
 
-snippet list.str "list string" b
+snippet l.str "list string" b
 let ${1:str} = string(${2:list})
 $0
 endsnippet
 
+snippet l.echom "echom element of list" b
+echom ${1:list }[${2:index}]
+$0
+endsnippet
+
+snippet l.reg.match "reg search a pat from begin, return matched index" b
+let ${1: result } = match( ${2: list } , ${3: pat }  , ${4: startIndex } , ${5: count } )
+$0
+endsnippet
+
+snippet l.reg.matchend "reg search a pat from end , return matched index" b
+let ${1: result } = matchend( ${2: list } , ${3: pat }  , ${4: startIndex } , ${5: count } )
+$0
+endsnippet
 
 # vim:ft=snippets:

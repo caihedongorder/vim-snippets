@@ -424,6 +424,14 @@ def cs_getFuncParams(shorttype):
 		strParams += ")"
 		return retValue + " " + funcName + strParams
 	return shorttype
+def cs_ExtractAnVariable(var2Extract):
+	""" to extract an varible 
+		ex: a.b.c => var c = a.b.c;
+		:var2Extract: identifies joined by '.'
+	"""
+	identifies = var2Extract.split('.')
+	numIdentifies = len(identifies)
+	return 'var ' + identifies[numIdentifies-1] + ' = ' + var2Extract + ';'
 endglobal
 
 ################
@@ -527,6 +535,19 @@ snippet "\bf([pri]?)\.([a-zA-Z_.]+)\b" "" r
 endsnippet
 
 #######################################################################
+#                            ulti snippets                            #
+#######################################################################
+
+snippet "([\w.()]+)\.s" "expands an variable like var:{var}" r
+`!p snip.rv = match.group(1) + ':' "{ " + match.group(1) + " }"`$0
+endsnippet
+
+snippet "([\w.]+)\.e" "extract an variable" r
+`!p snip.rv = cs_ExtractAnVariable( match.group(1) )`
+endsnippet
+
+
+#######################################################################
 #                           string snippets                           #
 #######################################################################
 
@@ -555,9 +576,6 @@ snippet s.format "string format" w
 \$"$1"$0
 endsnippet
 
-snippet "([\w.()]+)\.s" "Description" r
-`!p snip.rv = match.group(1) + ':' "{ " + match.group(1) + " }"`$0
-endsnippet
 
 snippet s.sub "get sub string" b
 ${1:result} = ${2:str}.Substring( ${3:startIndex} , ${4: count} );$0
@@ -672,6 +690,28 @@ foreach (var ${1:element} in ${2:arr})
 $0
 endsnippet
 
+snippet arr.find "find an element" b
+${1:elementType} ${2:findedElem} = $1();
+foreach (var ${3:element} in ${4:arr})
+{
+	if (${5:condition})
+	{
+		$2 = $3;
+		break;
+	}
+}
+$0
+endsnippet
+
+snippet arr.get "get an element by index" b
+var ${1:targetValue} = ${2:arr}[${3:index}];
+$0
+endsnippet
+
+snippet arr.set "set an element value" b
+${1:arr}[${2:index}] = ${3:value};
+$0
+endsnippet
 
 
 # public int propName { get; set; } 

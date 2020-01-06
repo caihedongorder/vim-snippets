@@ -150,13 +150,13 @@ endsnippet
 #  带$前缀的尖括号  #
 #####################
 
-snippet "\.ad" "Parenthesis (postfix)" r
-${$1:$2}$0
+snippet "([\d]+)d" " expand snip place holder" r
+${`!p snip.rv = match.group(1) `:${1:holderTips} } $0
 endsnippet
 
 ############
 #  反引号  #
-############
+###########
 
 snippet ".r" "Parenthesis (postfix)" r
 \`$1\`$0
