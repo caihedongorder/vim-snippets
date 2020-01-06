@@ -29,7 +29,7 @@ endsnippet
 #  logic class  #
 #################
 
-snippet ucl "ue4 logic class" b
+snippet u.class.logic "ue4 logic class" b
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -69,7 +69,7 @@ endsnippet
 #############################
 
 
-snippet uca "ue4 logic class" b
+snippet u.class.actor "ue4 actor class" b
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -90,6 +90,151 @@ namespace UnrealEngine.Game
 	}
 }
 endsnippet
+global !p
+def cs_getTypePrefix(shorttype):
+	if shorttype == "img":
+		return "Image_"
+	elif shorttype == "btn":
+		return "Button_"
+	elif shorttype == "sli":
+		return "Slider_"
+	elif shorttype == "combo":
+		return "ComboBox_"
+	elif shorttype == "prog":
+		return "Progressbar_"
+	return ""
+def cs_gettype(shorttype):
+	if shorttype == "img":
+		return "UImage"
+	elif shorttype == "btn":
+		return "UButton"
+	elif shorttype == "sli":
+		return "USlider"
+	elif shorttype == "combo":
+		return "UComboBox"
+	elif shorttype == "prog":
+		return "UProgressBar"
+	return ""
+
+	# 获取全局变量名 比如：Image_XXX
+def cs_GetOneWidgetGlobalVariableName(typeStr , valueStr):
+	return cs_gettype(typeStr) + '_' + valueStr
+	# 获取本地本地变量名 比如 l_Image_XXX
+def cs_GetOneWidgetLocalVariableName(typeStr , valueStr):
+	return 'l_' + cs_GetOneWidgetGlobalVariableName(typeStr , valueStr)
+	# 产生一个控件定义
+def cs_generateWidgetOneDefine(typeStr,valueStr,addLineIndent):
+	lineIndent  =  '\t\t' if addLineIndent else ''
+	return lineIndent + 'private '+ cs_gettype(typeStr) + ' ' + cs_GetOneWidgetGlobalVariableName(typeStr,valueStr)  + ';\n'
+	# 产生一个控件初始化
+def cs_generateOneWidgetInit(typeStr,valueStr,addLineIndent):
+	varName = cs_GetOneWidgetGlobalVariableName(typeStr,valueStr)
+	lineIndent  =  '\t\t\t' if addLineIndent else ''
+	return lineIndent + varName +' = UObjectUtil.GetProperty<' + cs_gettype(typeStr) + '>' + '(this, "'+ varName +'");\n'
+	# 产生一个控件目标控件Set方法的局部变量 <++++> 用于快速替换
+def cs_generateOneWidgetSetDataLocalVariable(typeStr,valueStr,addLineIndent):
+	lineIndent  =  '\t\t\t' if addLineIndent else ''
+	return lineIndent + 'var ' + cs_GetOneWidgetLocalVariableName(typeStr , valueStr) + '= <++++> ;\n'
+	# 每个控件产生Set 代码
+def cs_generateOneWidgetSetData(typeStr,valueStr):
+	if typeStr == "img":
+		# var t_icon = UObjectGlobals.StaticLoadObject(
+		#     UTexture2D.StaticClass(), UObjectGlobals.GetTransientPackage(),
+		#     characterCfgInfo.head_circle_paths) as UTexture2D;
+		# Image_TeamLeaderIcon.SetBrushFromTexture(t_icon, true);
+		localIconName = cs_GetOneWidgetLocalVariableName(typeStr,valueStr) + '_Icon'
+		codestr = '\t\t\t' + 'var ' + localIconName + '= UObjectGlobals.StaticLoadObject( UTexture2D.StaticClass(), UObjectGlobals.GetTransientPackage(),\n'
+		codestr += '\t\t\t\t\t\t' + cs_GetOneWidgetGlobalVariableName(typeStr,valueStr) + ') as UTexture2D;\n';
+		codestr += '\t\t\t' + cs_GetOneWidgetGlobalVariableName(typeStr,valueStr) + '.SetBrushFromTexture(' + localIconName + ' , true);\n\n'
+		return codestr
+	elif typeStr == "btn":
+		return ""
+	elif typeStr == "sli":
+		return ""
+	elif typeStr == "combo":
+		return ""
+	elif typeStr == "prog":
+		return ""
+	return ""
+	# 产生所有控件定义
+def cs_generateWidgetDefine( params):
+    # TextBlock_TeamName = UObjectUtil.GetProperty<UTextBlock>(this, "TextBlock_TeamName");
+	codestr = ""
+	paramsList = params.split('.')
+	paramCount = len(paramsList)
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[paramIndex]
+		valueStr = paramsList[paramIndex+1]
+		codestr += cs_generateWidgetOneDefine(typeStr,valueStr,paramIndex != 0)
+		paramIndex += 2
+	return codestr
+	#产生所有控件初始化
+def cs_generateWidgetInit( params):
+	snip << 3;
+    # private UImage Image_TacticalPanelBg;
+	codestr = ""
+	paramsList = params.split('.')
+	paramCount = len(paramsList)
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[paramIndex]
+		valueStr = paramsList[paramIndex+1]
+		codestr += cs_generateOneWidgetInit(typeStr,valueStr , paramIndex != 0)
+		paramIndex += 2
+	return codestr
+	#产生所有控件SetData代码
+def cs_generateWidgetSetData( params):
+	snip << 3;
+	codestr = ""
+	localInitCodeStr = ""
+	widgetSetCodeStr = ""
+	paramsList = params.split('.')
+	paramCount = len(paramsList)
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[paramIndex]
+		valueStr = paramsList[paramIndex+1]
+		localInitCodeStr += cs_generateOneWidgetSetDataLocalVariable(typeStr,valueStr , paramIndex != 0)
+		widgetSetCodeStr += cs_generateOneWidgetSetData(typeStr,valueStr)
+
+		paramIndex += 2
+	return localInitCodeStr + '\n' + widgetSetCodeStr
+endglobal
+
+# u.class.widget.img.Name.img.Name1
+snippet "u.class.widget.([\w.]+)" "ue4 widget class" r
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+//
+// 模块名：$1
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${2:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game
+{
+	public class A${1:`!p snip.rv = snip.basename`} : UUserWidget
+	{
+		`!p snip.rv = cs_generateWidgetDefine( match.group(1))`
+
+		[UE4Function(EFunctionFlags.FUNC_Common)]
+		void Construct()
+		{
+			`!p snip.rv = cs_generateWidgetInit( match.group(1))`
+		}
+
+		public void SetData()
+		{
+			`!p snip.rv = cs_generateWidgetSetData( match.group(1))`
+		}
+	}
+}
+endsnippet
 
 
 snippet u.event.add "AddEventListener" b
@@ -105,6 +250,14 @@ ${playPawn:1} = UGameplayStatics.GetPlayerPawn(${2:SceneManager.Instance.GameIns
 endsnippet
 
 snippet u.timer.ladd "增加局部定时器" b
+TimerHandle TH_${1:Name};
+TH_$1 = TimerMgr.Instance.AddLocalTimer(${2:0.01f},${3:false},()=>
+{
+	$0
+});
+endsnippet
+
+snippet u.timer.ladd.only "增加局部定时器" b
 TimerMgr.Instance.AddLocalTimer(${1:0.01f},${2:false},()=>
 {
 	$0
@@ -117,7 +270,12 @@ TimerMgr.Instance.AddSpecialTimer(${1:0.01f},()=>
 	$0
 });
 endsnippet
-
 snippet u.actor.setloc "设置物件位置" b
 ${1:actor}.K2_SetActorLocation(${2:loc},false,null,true);$0
 endsnippet
+
+snippet u.actor.destroy "删除物件" b
+${1:actor}.K2_DestroyActor();
+$0
+endsnippet
+

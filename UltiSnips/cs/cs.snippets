@@ -582,8 +582,8 @@ ${1:result} = ${2:str}.Substring( ${3:startIndex} , ${4: count} );$0
 endsnippet
 
 
-snippet s.containt "check if string containt substr" w
-String.Containt(${2:subStr})
+snippet s.contains "check if string contains substr" w
+String.Contains(${2:subStr})
 endsnippet
 
 snippet s.startswith "check if string end with" w
@@ -710,6 +710,216 @@ endsnippet
 
 snippet arr.set "set an element value" b
 ${1:arr}[${2:index}] = ${3:value};
+$0
+endsnippet
+
+#######################################################################
+#                            list snippet                             #
+#######################################################################
+snippet "l.def.([\w]+)" "define a list and new" r
+List<${1:`!p snip.rv = cs_gettype(match.group(1))`}> ${2:varName};$0
+endsnippet
+
+snippet "l.def.new.([\w]+)" "define a list and new" r
+List<${1:`!p snip.rv = cs_gettype(match.group(1))`}> ${2:varName} = new List<$1>(){$3 };
+$0
+endsnippet
+
+
+snippet l.len "length of list" b
+var ${1:length } = ${2:list }.Count;
+endsnippet
+
+snippet l.len.only "length of list" w
+${2:list}.Count$0
+endsnippet
+
+snippet l.get.only "get element by index" w
+${1:list}[${2:index}]$0
+endsnippet
+
+snippet l.get "length of list" b
+var ${1:varName} = ${2:list}[${3:index}]$0
+endsnippet
+
+snippet l.get.range "get a range of element into a list" b
+var ${1:newList} = ${2:list}.GetRange(${3:startIndex} , ${4:count});
+$0
+endsnippet
+
+snippet l.set "set element of list value" 
+${1:list}[${2:index}] = ${3:value};
+endsnippet
+
+snippet l.for "for loop" b
+for (var ${1:iList} = 0; $1 < ${2:list}.Count ; $1++)
+{
+	var ${4:curElement} = $2[$1];
+	${3}	
+}
+$0
+endsnippet
+
+snippet l.foreach "for each" b
+foreach (var ${1:element} in ${2:list})
+{
+	$3
+}
+$0
+endsnippet
+
+snippet l.add "add an element to a list" b
+${1:list}.Add(${2:element});
+$0
+endsnippet
+
+snippet l.insert "insert an element to a list" b
+${1:list}.Insert(${2:Index} , ${3:element});
+endsnippet
+
+snippet l.remove "remove an element" b
+${1:list}.Remove(${2:element});
+$0
+endsnippet
+
+snippet l.remove.at "remove an element by index" b
+${1:list}.RemoveAt(${2:index});
+$0
+endsnippet
+
+snippet l.remove.range "remove an element by index" b
+${1:list}.RemoveRange(${2:startIndex},${3:Count});
+$0
+endsnippet
+
+snippet l.contains "check if a list cantaint a element" b
+${1:list}.Contains(${2:element})$0
+$0
+endsnippet
+
+snippet l.sort "sort a list" b
+${1:list}.Sort((x,y)=>{
+	${2:return -1;}
+});
+$0
+endsnippet
+
+snippet l.exist "check if there is any element in a list" w
+${1:list}.Exists( (x) => {
+	${2:return false;}
+})
+endsnippet
+
+snippet l.exist.simple "check if there is any element in a list" w
+${1:list}.Exists( x => ${2:expr})$0
+endsnippet
+
+snippet l.orderby "order by to list" b
+var ${1:orderedList} = ${2:list}.OrderBy(x=>${3:x.id}).ToList();
+$0
+endsnippet
+
+snippet l.index "get index of an element in a list" b
+var ${1:index} = ${2:list}.IndexOf( ${3:element} , ${4:startIndex} );
+$0
+endsnippet
+
+snippet l.clear "clear a list" b
+${1:list}.Clear();
+$0
+endsnippet
+
+snippet l.reverse "reverse a list" b
+${1:list}.Reverse();
+$0
+endsnippet
+
+snippet l.extend "insert a collection into a list" b
+${1:list}.InsertRange(${2:startIndex} , ${3:list2Insert});
+$0
+endsnippet
+
+#######################################################################
+#                            dict snippets                            #
+#######################################################################
+snippet "d.def.([\w]+).([\w]+)" "define a dict " r
+Dictionary<`!p snip.rv = cs_gettype(match.group(1))`, `!p snip.rv = cs_gettype(match.group(2))`> ${3:varName};
+$0
+endsnippet
+
+
+snippet "d.def.new.([\w]+).([\w]+)" "define a dict and new" r
+Dictionary<`!p snip.rv = cs_gettype(match.group(1))`, `!p snip.rv = cs_gettype(match.group(2))`> ${3:varName} = new Dictionary<`!p snip.rv = cs_gettype(match.group(1))`, `!p snip.rv = cs_gettype(match.group(2))`>;
+$0
+endsnippet
+
+snippet d.get "get an element from a dict" w
+var ${1:element} = ${2:dict}[${3:key}];
+$0
+endsnippet
+
+snippet d.get.only "get an element from a dict" b
+${1:dict}[${2:key}]$0
+endsnippet
+
+snippet d.get.try "try to get an element form a dict" b
+if (${1:dict}.TryGetValue(${2:key} , out var ${3:outValue}))
+{
+	$4
+}
+$0
+endsnippet
+
+snippet d.set "set an value of dict" b
+${1:dict}[${2:key}] = ${3:value};
+$0
+endsnippet
+
+snippet d.add "add an element into a dict" b
+${1:dict}.Add( ${2:key} , ${3:value} );
+$0
+endsnippet
+
+snippet d.clear "clear a dict" b
+${1:dict}.Clear();
+$0
+endsnippet
+
+snippet d.containsKey "check if a dict contains a key" b
+${1:dict}.ContainsKey(${2:key})$0
+endsnippet
+
+snippet d.containsValue "check if a dict contains a value" b
+${1:dict}.ContainsValue(${2:value})$0
+endsnippet
+
+snippet d.remove "remove a key from dict" b
+${1:dict}.Remove(${2:key});
+$0
+endsnippet
+
+snippet d.foreach "for loop" b
+foreach (var ${1:keyValuePairs} in ${2:dict})
+{
+	var ${3:Key} = $1.Key;
+	var ${4:Value} = $1.Value;
+	$5
+}
+$0
+endsnippet
+
+snippet d.foreach.remove "for loop to run remove finish task" b
+List<${1:KeyType}> ${2:keys2Remove} = new List<$1>();
+foreach (var ${3:keyValuePairs} in ${3:dict})
+{
+	var ${5:Key} = $1.Key;
+	var ${6:Value} = $1.Value;
+	$7
+}
+foreach (var ${8:element2Remove} in $2)
+{
+	$3.Remove($8);
+}
 $0
 endsnippet
 
