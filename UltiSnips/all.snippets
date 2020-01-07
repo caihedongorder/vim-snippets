@@ -6,6 +6,7 @@
 # ~-55 so that other filetypes will still overwrite.
 priority -60
 
+
 ##############
 # NICE BOXES #
 ##############
@@ -17,6 +18,8 @@ tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At \
 vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, \
 no sea takimata sanctus est Lorem ipsum dolor sit amet.
 """
+def repeatString(string_to_repeat, times):
+    return string_to_repeat * times
 endglobal
 
 snippet box "A nice box with the current comment symbol" b
@@ -121,28 +124,28 @@ endsnippet
 #  圆括号  #
 ############
 
-snippet "\.p" "Parenthesis (postfix)" r
+snippet p "Parenthesis (postfix)" i
 ($1)$0
 endsnippet
 
 ############
 #  方括号  #
 ############
-snippet "\.s" "Parenthesis (postfix)" r
+snippet s "Parenthesis (postfix)" i
 [$1]$0
 endsnippet
 
 ############
 #  双引号  #
 ############
-snippet "\.q" "Parenthesis (postfix)" r
+snippet q "Parenthesis (postfix)" i
 "$1"$0
 endsnippet
 
 ############
 #  尖括号  #
 ############
-snippet "\.a" "Parenthesis (postfix)" r
+snippet a "Parenthesis (postfix)" i
 {$1}$0
 endsnippet
 
@@ -158,36 +161,47 @@ endsnippet
 #  反引号  #
 ###########
 
-snippet ".r" "Parenthesis (postfix)" r
-\`$1\`$0
+snippet r "Parenthesis (postfix)" i
+\`!p$1\`$0
 endsnippet
-
 ############
 #    ==    #
 ############
 
-snippet "eq" "" r
+
+snippet e "" i
 ==$0
 endsnippet
+
 
 ############
 #    !=    #
 ############
-snippet "neq" "" r
+snippet en "" i
 !=$0
 endsnippet
 
 ############
 #     +    #
 ############
-snippet "a" "" r
+snippet i "plus" i
 +$0
 endsnippet
+
+
 ############
 #     s    #
 ############
-snippet "s" "" r
+snippet c "sub " i
 -$0
+endsnippet
+
+snippet "t(\d+)" "convert to \t" r
+`!p snip.rv = repeatString('\\t',int(match.group(1)))`
+endsnippet
+
+snippet "n(\d+)" "convert to \n" r
+`!p snip.rv = repeatString('\\n',int(match.group(1)))`
 endsnippet
 
 

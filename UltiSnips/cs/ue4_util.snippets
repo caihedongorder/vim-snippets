@@ -7,15 +7,15 @@
 #  uelog class  #
 #################
 
-snippet ul "" b
+snippet u.log "" b
 UELog.Log(\$"${1}");${0}
 endsnippet
 
-snippet ule "" b
+snippet u.loge "" b
 UELog.LogError(\$"${1}");${0}
 endsnippet
 
-snippet ulw "UELog." b
+snippet u.logw "UELog." b
 UELog.LogWarning(\$"${1}");${0}
 endsnippet
 
@@ -24,6 +24,399 @@ public ${2:`!p snip.rv = snip.basename`}(){
 
 }
 endsnippet
+
+global !p
+dict_typeInfo = {
+	'image' :
+		{
+			'Prefix' : 'Image_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : True,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'button' :
+		{
+			'Prefix' : 'Button_',
+			'events' : 'OnClicked',
+			'events_params' : '',
+			'events_returnValues' : 'v',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'slider' :
+		{
+			'Prefix' : 'Slider_',
+			'events' : 'OnValueChanged',
+			'events_params' : 'f:value',
+			'events_returnValues' : 'v',
+			'need_set' : True,
+			'set_api' : 'SetValue', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'combo' :
+		{
+			'Prefix' : 'ComboBoxString_',
+			'events' : 'OnGenerateWidgetEvent|OnGenerateContentWidgetEvent',
+			'events_params' : 's:option|s:option',
+			'events_returnValues' : 'UUserWidget|UUserWidget',
+			'need_set' : True,
+			'set_api' : 'SetSelectedOption', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'check' :
+		{
+			'Prefix' : 'CheckBox_',
+			'events' : 'OnCheckStateChanged',
+			'events_params' : 'b:IsChecked',
+			'events_returnValues' : 'v',
+			'need_set' : True,
+			'set_api' : 'SetIsChecked', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'text' :
+		{
+			'Prefix' : 'TextBlock_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : True,
+			'set_api' : 'SetText', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'progress' :
+		{
+			'Prefix' : 'ProgressBar_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : True,
+			'set_api' : 'SetPercent', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'rich' :
+		{
+			'Prefix' : 'RichTextBlock_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : True,
+			'set_api' : 'SetText', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'canvas' :
+		{
+			'Prefix' : 'CanvasPanel_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'overlay' :
+		{
+			'Prefix' : 'Overlay_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'boxh' :
+		{
+			'Prefix' : 'HorizontalBox_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'boxv' :
+		{
+			'Prefix' : 'VerticalBox_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'boxs' :
+		{
+			'Prefix' : 'ScrollBox_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'switcher' :
+		{
+			'Prefix' : 'WidgetSwitcher_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'grid' :
+		{
+			'Prefix' : 'GridPanel_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : False,
+			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+}
+def cs_getAccessString( accessType ):
+	if accessType          == "p":
+		return "public"
+	elif accessType        == "r":
+		return "protected"
+	elif accessType        == "i":
+		return "private"
+	return "public"
+def cs_getTypePrefix( typeStr ):
+	typeInfo = dict_typeInfo.get( typeStr )
+	if typeInfo != None:
+		return typeInfo['Prefix']
+	return typeStr
+def cs_gettype( typeStr ):
+	if typeStr                == "v":
+		return "void"
+	elif typeStr              == "b":
+		return "bool"
+	if typeStr                == "sb":
+		return "sbyte"
+	elif typeStr              == "by":
+		return "byte"
+	elif typeStr              == "sh":
+		return "short"
+	elif typeStr              == "us":
+		return "ushort"
+	elif typeStr              == "i":
+		return "int"
+	elif typeStr              == "ui":
+		return "uint"
+	elif typeStr              == "l":
+		return "long"
+	elif typeStr              == "ul":
+		return "ulong"
+	elif typeStr              == "f":
+		return "float"
+	elif typeStr              == "d":
+		return "double"
+	elif typeStr              == "s":
+		return "string"
+	else:
+		if isinstance( typeStr,str ) and len( typeStr ) > 1:
+			if typeStr[0] == 'l' and typeStr[1] == '.' :
+				elemType = cs_gettype( typeStr[2:] )
+				return "List<"+ elemType + ">"
+			elif typeStr[0] == 'd' and typeStr[1] == '.' :
+				keyValueStr = typeStr[ 2: ]
+				strkeyElemType,strValueElelType = keyValueStr.split( '.',1 )
+				keyElemType = cs_gettype( strkeyElemType )
+				valueElemType = cs_gettype( strValueElelType )
+				print( keyElemType,valueElemType )
+				return "Dictionary< " + keyElemType + " , " + valueElemType + " >"
+			else:
+				typeInfo = dict_typeInfo.get( typeStr )
+				if typeInfo != None:
+					fullTypeStr = ('U'+ cs_getTypePrefix( typeStr ) )
+					return fullTypeStr[:-1]
+	return typeStr
+
+# 获取全局变量名 比如：Image_XXX
+def cs_GetWidgetGlobalVariableName( typeStr , valueStr ):
+	return cs_getTypePrefix(typeStr) + valueStr
+# 获取本地本地变量名 比如: l_Image_XXX
+def cs_GetWidgetLocalVariableName( typeStr , valueStr ):
+	return 'l_' + cs_GetWidgetGlobalVariableName( typeStr , valueStr )
+
+
+# 获取控件事件函数名
+def cs_GetWidgetEventFunctionName( typeStr , valueStr , eventName ):
+	variableName = cs_GetWidgetGlobalVariableName( typeStr , valueStr )
+	return variableName + '_' + eventName
+
+# 产生一个增加或者移除事件
+def cs_generateAddOrRemoveEvent( typeStr , valueStr , eventName, bAddEvent ):
+	identation = '\t\t\t'
+	variableName = cs_GetWidgetGlobalVariableName( typeStr , valueStr )
+	plugSign = '+' if bAddEvent else '-'
+	eventFunctionName = cs_GetWidgetEventFunctionName( typeStr , valueStr , eventName )
+	codestr = identation + variableName + '.' + eventName + ' ' + plugSign + '=' + eventFunctionName + ';\n'
+	return codestr
+
+# u.class.widget.image.Name.slider.mySlider.progress.myProg
+# u.class.widget.progress.myProg
+# 产生控件的AddEvent 或者RemoveEvent
+def cs_generateWidgetAddOrRemoveEvent( typeStr , valueStr , bAddEvent ):
+	codestr = ''
+	typeInfo = dict_typeInfo.get(typeStr)
+	if typeInfo != None:
+		identation = '\t\t\t'
+		strEventNames = typeInfo['events']
+		if len(strEventNames) > 0:
+			eventNameList = strEventNames.split('|')
+			for eventName in eventNameList:
+				codestr += cs_generateAddOrRemoveEvent( typeStr , valueStr , eventName , bAddEvent  )
+	return codestr
+	# 产生函数定义
+def cs_generateFunctionDefine( accessType , functionName , returnValue , params ):
+	strParams  = ''
+	if len(params) > 0:
+		paramsList = params.split( ';' )
+		paramCount = len( paramsList )
+		paramIndex = 0
+		while paramIndex < paramCount:
+			typeNameStr   = paramsList[paramIndex]
+			typeNamePairs = typeNameStr.split( ':' )
+			typeStr       = typeNamePairs[0]
+			NameStr       = typeNamePairs[1]
+			strParams    += cs_gettype( typeStr ) + ' ' + NameStr + ' ' + (',' if paramIndex < paramCount - 1 else '')
+			paramIndex   += 1
+	identation = '\t\t'
+	codestr   = identation + cs_getAccessString( accessType ) + ' ' + cs_gettype( returnValue ) + ' ' + functionName + '( ' + strParams + ' )\n'
+	codestr   += identation + '{\n'
+	codestr   += identation + '}\n'
+	return codestr
+	# 产生控件的 回调函数
+def cs_generateWidgetEventCallBack( typeStr , valueStr ):
+	codestr = ''
+	typeInfo = dict_typeInfo.get(typeStr)
+	if typeInfo != None:
+		identation           = '\t\t\t'
+
+		strEventNames        = typeInfo['events']
+		if len(strEventNames) > 0:
+			strEventParams       = typeInfo['events_params']
+			strEventReturnValues = typeInfo['events_returnValues']
+
+			eventNameList        = strEventNames.split('|')
+			eventParamsList      = strEventParams.split('|')
+			eventReturnValueList = strEventReturnValues.split('|')
+
+			iEvent               = 0
+			EventCount           = len(eventNameList)
+
+			while iEvent < EventCount:
+				eventName        = eventNameList[iEvent]
+				eventParams      = eventParamsList[iEvent]
+				eventReturnValue = eventReturnValueList[iEvent]
+
+				eventFunctionName = cs_GetWidgetEventFunctionName( typeStr , valueStr , eventName )
+				codestr += cs_generateFunctionDefine( 'i' , eventFunctionName , eventReturnValue , eventParams )
+				# Slider_MySlider_OnValueChanged    f:value      v
+				# codestr +=   eventFunctionName + '    ' + eventParams + '      '  +  eventReturnValue
+
+				iEvent = iEvent + 1
+	return codestr
+
+	# 产生一个控件定义
+def cs_generateWidgetDefine( typeStr,valueStr ):
+	return '\t\t' + 'private '+ cs_gettype( typeStr ) + ' ' + cs_GetWidgetGlobalVariableName( typeStr,valueStr )  + ';\n'
+	# 产生一个控件初始化
+def cs_generateWidgetInit( typeStr,valueStr ):
+	varName = cs_GetWidgetGlobalVariableName( typeStr,valueStr )
+	return '\t\t\t' + varName +' = UObjectUtil.GetProperty<' + cs_gettype( typeStr ) + '>' + '(this, "'+ varName +'");\n'
+	# 产生一个控件目标控件Set方法的局部变量 <++++> 用于快速替换
+def cs_generateWidgetSetDataLocalVariable(typeStr,valueStr):
+	typeInfo = dict_typeInfo.get(typeStr)
+	if typeInfo != None:
+		bNeedSet = typeInfo['need_set']
+		if bNeedSet :
+			return '\t\t\t' + 'var ' + cs_GetWidgetLocalVariableName( typeStr , valueStr ) + '= <++++> ;\n'
+	return ""
+
+	# 每个控件产生Set 代码
+def cs_generateWidgetSetData( typeStr,valueStr ):
+	# 跳过黑名单
+	codestr  = ''
+	typeInfo = dict_typeInfo.get(typeStr)
+	if typeInfo != None:
+		bNeedSet = typeInfo['need_set']
+		if bNeedSet :
+			strSetApi = typeInfo['set_api']
+			if len(strSetApi) > 0:
+				codestr = '\t\t\t' + cs_GetWidgetGlobalVariableName( typeStr,valueStr ) + '.'+ strSetApi +'( ' + cs_GetWidgetLocalVariableName(typeStr , valueStr) + ');\n'
+			elif typeStr == 'image':
+				# var t_icon = UObjectGlobals.StaticLoadObject(
+				#     UTexture2D.StaticClass(), UObjectGlobals.GetTransientPackage(),
+				#     characterCfgInfo.head_circle_paths) as UTexture2D;
+				# Image_TeamLeaderIcon.SetBrushFromTexture(t_icon, true);
+				localIconName = cs_GetWidgetLocalVariableName( typeStr,valueStr ) + '_Icon'
+				codestr = '\t\t\t' + 'var ' + localIconName + '= UObjectGlobals.StaticLoadObject( UTexture2D.StaticClass(), UObjectGlobals.GetTransientPackage(),\n'
+				codestr += '\t\t\t\t\t\t' + cs_GetWidgetLocalVariableName( typeStr,valueStr ) + ') as UTexture2D;\n';
+				codestr += '\t\t\t' + cs_GetWidgetGlobalVariableName( typeStr,valueStr ) + '.SetBrushFromTexture(' + localIconName + ' , true);\n\n'
+	return codestr
+
+	# 产生所有控件定义
+def cs_generateAllWidgetsDefine( params ):
+    # TextBlock_TeamName = UObjectUtil.GetProperty<UTextBlock>(this, "TextBlock_TeamName");
+	codestr = "\n"
+	paramsList = params.split( '.' )
+	paramCount = len( paramsList )
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[ paramIndex ]
+		valueStr = paramsList[ paramIndex+1 ]
+		codestr += cs_generateWidgetDefine( typeStr,valueStr )
+		paramIndex += 2
+	return codestr
+	#产生所有控件初始化
+def cs_generateAllWidgetsInit( params ):
+    # private UImage Image_TacticalPanelBg;
+	codestr = "\n"
+	paramsList = params.split( '.' )
+	paramCount = len( paramsList )
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[ paramIndex ]
+		valueStr = paramsList[ paramIndex+1 ]
+		codestr += cs_generateWidgetInit( typeStr,valueStr )
+		paramIndex += 2
+	return codestr
+	#产生所有控件SetData代码
+def cs_generateAllWidgetsSetData( params ):
+	localInitCodeStr = "\n"
+	widgetSetCodeStr = "\n"
+	paramsList = params.split( '.' )
+	paramCount = len( paramsList )
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[ paramIndex ]
+		valueStr = paramsList[ paramIndex+1 ]
+		localInitCodeStr += cs_generateWidgetSetDataLocalVariable( typeStr,valueStr )
+		widgetSetCodeStr += cs_generateWidgetSetData( typeStr,valueStr )
+
+		paramIndex += 2
+	return localInitCodeStr + '\n' + widgetSetCodeStr
+
+	# 产生所有控件的AddEventListener Or RemoveEventListener
+def cs_generateAllWidgetsAddOrRemoveEventListener( params , bAddEvent ):
+    # TextBlock_TeamName = UObjectUtil.GetProperty<UTextBlock>(this, "TextBlock_TeamName");
+	codestr = "\n"
+	paramsList = params.split( '.' )
+	paramCount = len( paramsList )
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[ paramIndex ]
+		valueStr = paramsList[ paramIndex + 1 ]
+		codestr += cs_generateWidgetAddOrRemoveEvent( typeStr,valueStr,bAddEvent )
+		paramIndex += 2
+	return codestr
+
+	# 产生所有Widget绑定事件回调函数体
+def cs_generateAllWidgetsEventFunctionBody( params ):
+    # TextBlock_TeamName = UObjectUtil.GetProperty<UTextBlock>(this, "TextBlock_TeamName");
+	codestr = "\n"
+	paramsList = params.split( '.' )
+	paramCount = len( paramsList )
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[ paramIndex ]
+		valueStr = paramsList[ paramIndex + 1 ]
+		codestr += cs_generateWidgetEventCallBack( typeStr,valueStr )
+		paramIndex += 2
+	return codestr
+endglobal
 
 #################
 #  logic class  #
@@ -34,6 +427,7 @@ snippet u.class.logic "ue4 logic class" b
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
 //
+// u.class.widget.image.MyImage.button.MyButton.combo.MyCombo.check.MyCheckBox.text.MyText.progress.MyProgress.rich.MyRich.canvas.MyCanvas.overlay.Myoverlay.boxh.MyHBox.boxv.MyVBox.boxs.MySbox.switcher.MyWitcher.grid.MyGrid
 // 模块名：$1
 // 创建者：caihedong
 // 创建日期：`!v strftime("%Y-%m-%d")`
@@ -67,13 +461,12 @@ endsnippet
 #############################
 #  ue4 actor class snippet  #
 #############################
-
-
 snippet u.class.actor "ue4 actor class" b
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
-//
+// 
+// u.class.widget.image.MyImage.button.MyButton.combo.MyCombo.check.MyCheckBox.text.MyText.progress.MyProgress.rich.MyRich.canvas.MyCanvas.overlay.Myoverlay.boxh.MyHBox.boxv.MyVBox.boxs.MySbox.switcher.MyWitcher.grid.MyGrid
 // 模块名：$1
 // 创建者：caihedong
 // 创建日期：`!v strftime("%Y-%m-%d")`
@@ -90,119 +483,6 @@ namespace UnrealEngine.Game
 	}
 }
 endsnippet
-global !p
-def cs_getTypePrefix(shorttype):
-	if shorttype == "img":
-		return "Image_"
-	elif shorttype == "btn":
-		return "Button_"
-	elif shorttype == "sli":
-		return "Slider_"
-	elif shorttype == "combo":
-		return "ComboBox_"
-	elif shorttype == "prog":
-		return "Progressbar_"
-	return ""
-def cs_gettype(shorttype):
-	if shorttype == "img":
-		return "UImage"
-	elif shorttype == "btn":
-		return "UButton"
-	elif shorttype == "sli":
-		return "USlider"
-	elif shorttype == "combo":
-		return "UComboBox"
-	elif shorttype == "prog":
-		return "UProgressBar"
-	return ""
-
-	# 获取全局变量名 比如：Image_XXX
-def cs_GetOneWidgetGlobalVariableName(typeStr , valueStr):
-	return cs_gettype(typeStr) + '_' + valueStr
-	# 获取本地本地变量名 比如 l_Image_XXX
-def cs_GetOneWidgetLocalVariableName(typeStr , valueStr):
-	return 'l_' + cs_GetOneWidgetGlobalVariableName(typeStr , valueStr)
-	# 产生一个控件定义
-def cs_generateWidgetOneDefine(typeStr,valueStr,addLineIndent):
-	lineIndent  =  '\t\t' if addLineIndent else ''
-	return lineIndent + 'private '+ cs_gettype(typeStr) + ' ' + cs_GetOneWidgetGlobalVariableName(typeStr,valueStr)  + ';\n'
-	# 产生一个控件初始化
-def cs_generateOneWidgetInit(typeStr,valueStr,addLineIndent):
-	varName = cs_GetOneWidgetGlobalVariableName(typeStr,valueStr)
-	lineIndent  =  '\t\t\t' if addLineIndent else ''
-	return lineIndent + varName +' = UObjectUtil.GetProperty<' + cs_gettype(typeStr) + '>' + '(this, "'+ varName +'");\n'
-	# 产生一个控件目标控件Set方法的局部变量 <++++> 用于快速替换
-def cs_generateOneWidgetSetDataLocalVariable(typeStr,valueStr,addLineIndent):
-	lineIndent  =  '\t\t\t' if addLineIndent else ''
-	return lineIndent + 'var ' + cs_GetOneWidgetLocalVariableName(typeStr , valueStr) + '= <++++> ;\n'
-	# 每个控件产生Set 代码
-def cs_generateOneWidgetSetData(typeStr,valueStr):
-	if typeStr == "img":
-		# var t_icon = UObjectGlobals.StaticLoadObject(
-		#     UTexture2D.StaticClass(), UObjectGlobals.GetTransientPackage(),
-		#     characterCfgInfo.head_circle_paths) as UTexture2D;
-		# Image_TeamLeaderIcon.SetBrushFromTexture(t_icon, true);
-		localIconName = cs_GetOneWidgetLocalVariableName(typeStr,valueStr) + '_Icon'
-		codestr = '\t\t\t' + 'var ' + localIconName + '= UObjectGlobals.StaticLoadObject( UTexture2D.StaticClass(), UObjectGlobals.GetTransientPackage(),\n'
-		codestr += '\t\t\t\t\t\t' + cs_GetOneWidgetGlobalVariableName(typeStr,valueStr) + ') as UTexture2D;\n';
-		codestr += '\t\t\t' + cs_GetOneWidgetGlobalVariableName(typeStr,valueStr) + '.SetBrushFromTexture(' + localIconName + ' , true);\n\n'
-		return codestr
-	elif typeStr == "btn":
-		return ""
-	elif typeStr == "sli":
-		return ""
-	elif typeStr == "combo":
-		return ""
-	elif typeStr == "prog":
-		return ""
-	return ""
-	# 产生所有控件定义
-def cs_generateWidgetDefine( params):
-    # TextBlock_TeamName = UObjectUtil.GetProperty<UTextBlock>(this, "TextBlock_TeamName");
-	codestr = ""
-	paramsList = params.split('.')
-	paramCount = len(paramsList)
-	paramIndex = 0
-	while paramIndex + 1 < paramCount:
-		typeStr = paramsList[paramIndex]
-		valueStr = paramsList[paramIndex+1]
-		codestr += cs_generateWidgetOneDefine(typeStr,valueStr,paramIndex != 0)
-		paramIndex += 2
-	return codestr
-	#产生所有控件初始化
-def cs_generateWidgetInit( params):
-	snip << 3;
-    # private UImage Image_TacticalPanelBg;
-	codestr = ""
-	paramsList = params.split('.')
-	paramCount = len(paramsList)
-	paramIndex = 0
-	while paramIndex + 1 < paramCount:
-		typeStr = paramsList[paramIndex]
-		valueStr = paramsList[paramIndex+1]
-		codestr += cs_generateOneWidgetInit(typeStr,valueStr , paramIndex != 0)
-		paramIndex += 2
-	return codestr
-	#产生所有控件SetData代码
-def cs_generateWidgetSetData( params):
-	snip << 3;
-	codestr = ""
-	localInitCodeStr = ""
-	widgetSetCodeStr = ""
-	paramsList = params.split('.')
-	paramCount = len(paramsList)
-	paramIndex = 0
-	while paramIndex + 1 < paramCount:
-		typeStr = paramsList[paramIndex]
-		valueStr = paramsList[paramIndex+1]
-		localInitCodeStr += cs_generateOneWidgetSetDataLocalVariable(typeStr,valueStr , paramIndex != 0)
-		widgetSetCodeStr += cs_generateOneWidgetSetData(typeStr,valueStr)
-
-		paramIndex += 2
-	return localInitCodeStr + '\n' + widgetSetCodeStr
-endglobal
-
-# u.class.widget.img.Name.img.Name1
 snippet "u.class.widget.([\w.]+)" "ue4 widget class" r
 #region 模块信息
 /*----------------------------------------------------------------
@@ -220,18 +500,35 @@ namespace UnrealEngine.Game
 {
 	public class A${1:`!p snip.rv = snip.basename`} : UUserWidget
 	{
-		`!p snip.rv = cs_generateWidgetDefine( match.group(1))`
+		`!p snip.rv = cs_generateAllWidgetsDefine( match.group(1) )`
 
-		[UE4Function(EFunctionFlags.FUNC_Common)]
+		[UE4Function( EFunctionFlags.FUNC_Common )]
 		void Construct()
 		{
-			`!p snip.rv = cs_generateWidgetInit( match.group(1))`
-		}
+			`!p snip.rv = cs_generateAllWidgetsInit( match.group(1) )`
 
+			AddEventListener();
+		}
+		[UE4Function( EFunctionFlags.FUNC_Common )]
+		void Destruct()
+		{
+			RemoveEventListener();	
+		}
 		public void SetData()
 		{
-			`!p snip.rv = cs_generateWidgetSetData( match.group(1))`
+			`!p snip.rv = cs_generateAllWidgetsSetData( match.group(1) )`
 		}
+
+		private void AddEventListener()
+		{
+			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , True)`
+		}
+
+		private void RemoveEventListener()
+		{
+			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , False)`
+		}
+		`!p snip.rv = cs_generateAllWidgetsEventFunctionBody( match.group(1) )`
 	}
 }
 endsnippet
