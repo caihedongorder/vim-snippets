@@ -163,6 +163,7 @@ dict_typeInfo = {
 			'set_api' : '', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
 		},
 }
+
 def cs_getAccessString( accessType ):
 	if accessType          == "p":
 		return "public"
@@ -422,7 +423,7 @@ endglobal
 #  logic class  #
 #################
 
-snippet u.class.logic "ue4 logic class" b
+snippet 'uilogic.([\w.]+)' "ue4 logic class" r
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -436,24 +437,36 @@ snippet u.class.logic "ue4 logic class" b
 #endregion
 using UnrealEngine.Game.Event;
 using UnrealEngine.Game.Scene;
-namespace UnrealEngine.Game.${1:spaceName}
+namespace UnrealEngine.Game.UI
 {
-	public class ${2:`!p snip.rv = snip.basename`}
+	public partial class `!p snip.rv = snip.basename` : UILogic
 	{
+		/// <summary>
+		///		界面显示时回调
+		/// </summary>
+		public override void OnShow(params object[] args)
+		{
+			base.OnShow(args);
+		
+			`!p snip.rv = cs_generateAllWidgetsSetData( match.group(1) )`
+		}
+
 		/// <summary>
 		/// 订阅事件
 		/// </summary>
-		public void AddEventListeners()
+		private void AddEventListener()
 		{
-			${0}		
+			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , True)`
 		}
+
 		/// <summary>
 		/// 取消订阅事件
 		/// </summary>
-		public void RemoveEventListeners()
+		private void RemoveEventListener()
 		{
-				
+			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , False)`
 		}
+		`!p snip.rv = cs_generateAllWidgetsEventFunctionBody( match.group(1) )`
 	}
 }
 endsnippet
@@ -483,7 +496,35 @@ namespace UnrealEngine.Game
 	}
 }
 endsnippet
-snippet "u.class.widget.([\w.]+)" "ue4 widget class" r
+
+#######################################################################
+#                             Util Class                              #
+#######################################################################
+snippet u.class.util "util class" b
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+// 
+// u.class.widget.image.MyImage.button.MyButton.combo.MyCombo.check.MyCheckBox.text.MyText.progress.MyProgress.rich.MyRich.canvas.MyCanvas.overlay.Myoverlay.boxh.MyHBox.boxv.MyVBox.boxs.MySbox.switcher.MyWitcher.grid.MyGrid
+// 模块名：$1
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${2:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game.${1:Name}
+{
+	public class `!p snip.rv = snip.basename`
+	{
+		${0}		
+	}
+}
+endsnippet
+
+
+snippet "uwidget.([\w.]+)" "ue4 widget class" r
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -519,11 +560,17 @@ namespace UnrealEngine.Game
 			`!p snip.rv = cs_generateAllWidgetsSetData( match.group(1) )`
 		}
 
+		/// <summary>
+		/// 订阅事件
+		/// </summary>
 		private void AddEventListener()
 		{
 			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , True)`
 		}
 
+		/// <summary>
+		/// 取消订阅事件
+		/// </summary>
 		private void RemoveEventListener()
 		{
 			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , False)`
@@ -531,6 +578,19 @@ namespace UnrealEngine.Game
 		`!p snip.rv = cs_generateAllWidgetsEventFunctionBody( match.group(1) )`
 	}
 }
+endsnippet
+
+snippet "ui\.(\w+)" "expand ui type" r
+`!p snip.rv = cs_gettype( match.group(1) )`
+endsnippet
+
+snippet "ui\.(\w+).def.(\w+)" "expand ui type" r
+`!p snip.rv = cs_generateWidgetDefine( match.group(1) , match.group(2) )`
+`!p snip.rv = cs_generateWidgetSetDataLocalVariable( match.group(1) , match.group(2) )`
+`!p snip.rv = cs_generateWidgetSetData( match.group(1) , match.group(2) )`
+`!p snip.rv = cs_generateWidgetAddOrRemoveEvent( match.group(1) , match.group(2) , True)`
+`!p snip.rv = cs_generateWidgetAddOrRemoveEvent( match.group(1) , match.group(2) , False)`
+`!p snip.rv = cs_generateWidgetEventCallBack( match.group(1) , match.group(2) )`
 endsnippet
 
 
@@ -575,4 +635,45 @@ snippet u.actor.destroy "删除物件" b
 ${1:actor}.K2_DestroyActor();
 $0
 endsnippet
+
+
+####################
+#  table snippets  #
+####################
+
+snippet tbu "get from a user table" b
+var tbu`!p snip.rv = t[1].capitalize()`Info = TableUtil.get_${1:student}(${2:id});
+if(tbu`!p snip.rv = t[1].capitalize()`Info != null)
+{
+	$0
+}
+endsnippet
+
+snippet tb "get from a table" b
+var tb`!p snip.rv = t[1].capitalize()`CfgInfo = Tb_cfg_${1:character}.Get(${2:id});
+endsnippet
+snippet tb.get "get from a table" b
+var tb`!p snip.rv = t[1].capitalize()`CfgInfo = Tb_cfg_${1:character}.Get(${2:id});
+$0
+endsnippet
+
+
+snippet tb.tryget "get from a table" b
+var tb`!p snip.rv = t[1].capitalize()`CfgInfo = Tb_cfg_${1:character}.TryGet(${2:id});
+if (tb`!p snip.rv = t[1].capitalize()`CfgInfo != null)
+{
+	$0
+}
+endsnippet
+
+
+snippet "tb.get.([\w_]+)" "快速生成表get接口" r
+public static Tb_$1 get_${1:`!p snip.rv = match.group(1)`}(int id)         		
+{
+	return ClientMgr.GClient.GameData.Tb_$1.Find( x => x.id==id );
+}
+$0
+endsnippet
+
+
 
