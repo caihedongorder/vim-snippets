@@ -577,7 +577,7 @@ snippet s.format "string format" w
 endsnippet
 
 
-snippet s.sub "get sub string" b
+snippet s.substring "get sub string" b
 ${1:result} = ${2:str}.Substring( ${3:startIndex} , ${4: count} );$0
 endsnippet
 
@@ -626,8 +626,26 @@ $0
 endsnippet
 
 snippet s.split "split a string into an array" b
-${1:result} = ${2:str}.Split( '${3:,}' , ${4:maxCount} );
+${1:result} = ${2:str}.Split( '${3:,}' );
 $0
+endsnippet
+
+snippet s.split.2 "split a string into an array" b
+${1:result} = ${2:str}.Split( '${3:,}' , 2 );
+${4:left} = $1[0];
+${5:right} = $1[1];
+$0
+endsnippet
+
+snippet s.split.2.r "split a string into an array" b
+${1:sepPos} = ${2:str}.rfind(${3:,})
+if ($1 != -1)
+{
+	var ${4:left} = $2.Substring( 0 , $1 );
+	var ${5:right} = $2.Substring( $1 + 1 );
+	$0
+}
+
 endsnippet
 
 snippet s.reg "string sample" b

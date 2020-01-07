@@ -258,7 +258,6 @@ def write_function_docstring(t, snip):
 
 def get_dir_and_file_name(snip):
 	return os.getcwd().split(os.sep)[-1] + '.' + snip.basename
-
 endglobal
 
 ########################################
@@ -315,28 +314,6 @@ write_init_body(args, t[2], snip)
 `
 		$0
 endsnippet
-
-snippet testClass "class with slots and docstrings" b
-class ${1:MyClass}(${2:object}):
-
-	`!p snip.rv = triple_quotes(snip)`${3:Docstring for $1. }`!p snip.rv = triple_quotes(snip)`
-	def __init__(self$4):
-		`!p snip.rv = triple_quotes(snip)`${5:TODO: to be defined.}`!p
-snip.rv = ""
-snip >> 2
-
-args = get_args(t[4])
-
-write_docstring_args(args, snip)
-if args:
-	snip.rv += '\n' + snip.mkline('', indent='')
-	snip += triple_quotes(snip)
-
-write_init_body(args, t[2], snip)
-`
-		$0
-endsnippet
-
 
 
 snippet contain "methods for emulating a container type" b
@@ -729,18 +706,78 @@ ${1:${VISUAL:doc}}
 `!p snip.rv = triple_quotes(snip)`
 endsnippet
 
-snippet pmdoc "pocoo style module doc string" b
-# -*- coding: utf-8 -*-
-"""
-	`!p snip.rv = get_dir_and_file_name(snip)`
-	`!p snip.rv = '~' * len(get_dir_and_file_name(snip))`
+#######################################################################
+#                           string snippets                           #
+#######################################################################
 
-	${1:DESCRIPTION}
-
-	:copyright: (c) `date +%Y` by ${2:YOUR_NAME}.
-	:license: ${3:LICENSE_NAME}, see LICENSE for more details.
-"""
+snippet s.len "get length of a string" b
+${1:result} = len(${2:str})
 $0
+endsnippet
+
+snippet s.len.only "get length of a string" b
+len(${1:str})
+endsnippet
+
+snippet s.format "format a string" b
+${1:result} = f'${2:str}'
+$0
+endsnippet
+
+snippet s.format.only "format a string" b
+f'${1:str}'$0
+endsnippet
+
+snippet s.startswith "check if a string start with substring" w
+${1:str}.startswith(${2:substr})$0
+endsnippet
+
+snippet s.endswith "check if a string start with substring" w
+${1:str}.endswith(${2:substr})$0
+endsnippet
+
+snippet s.index "find a substring" b
+${1:result} = ${2:str}.find(${3:substr},${4:startIdx},${5:count})
+$0
+endsnippet
+
+snippet s.rindex "find a substring" b
+${1:result} = ${2:str}.rfind(${3:substr},${4:startIdx},${5:count})
+$0
+endsnippet
+
+snippet s.upper "convert a string to upper" b
+${1:result} = ${2:str}.upper()
+$0
+endsnippet
+
+snippet s.lower "convert a string to lower" b
+${1:result} = ${2:str}.lower()
+$0
+endsnippet
+
+snippet s.split "split a str into a list" b
+${1:result} = ${2:str}.split('${3:,}')
+$0
+endsnippet
+
+snippet s.split.2 "split a str into a list" b
+${1:sepStr} = ${2:str}.split('${3:,}' , 2)
+${4:left} = $1[0]
+${5:right} = $1[2]
+$0
+endsnippet
+
+snippet s.substring "get sub string from a string" b
+${1:result} = ${2:str}[${3:startIndex}:${4:count}+$3]
+endsnippet
+
+snippet s.split.2.r "split a str into a list" b
+${1:sepPos} = ${2:str}.rfind(${3:substr})
+if $1 != -1:
+	${4:left} = $2[0:$1]
+	${5:right} = $2[$1+1:]
+	$0
 endsnippet
 
 # vim:ft=snippets:
