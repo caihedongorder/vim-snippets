@@ -419,6 +419,38 @@ def cs_generateAllWidgetsEventFunctionBody( params ):
 	return codestr
 endglobal
 
+##################
+#  ue4 property  #
+##################
+snippet 'u.prop.(\w+)' "ue4 变量" r
+[UE4Property(EPropertyFlags.CPF_Common)]
+public `!p snip.rv = cs_gettype(match.group(1))` ${1:propName};
+endsnippet
+
+#######################################################################
+#                            场景相关对象获取代码片段                 #
+#######################################################################
+
+snippet u.battle.team "战斗场景中 队伍管理类" w
+var teamMgr = SceneManager.Instance.CurrentScene.TeamManager as TeamManagerInBattleScene;
+$0
+endsnippet
+snippet u.battle.scene "战斗场景中 战斗场景实例" w
+var battleScene = SceneManager.Instance.CurrentScene as BattleScene;
+$0
+endsnippet
+
+snippet u.battle.scene.get "获取战斗场景中的物件" b
+var currentScene = SceneManager.Instance.CurrentScene;
+var ${1:entity} = currentScene.GetEntity<${2:T}>(${3:entityId}) as $2;
+$0
+endsnippet
+
+snippet u.battle.util "获取战斗场景实用类" w
+BattleScene_Util$0
+endsnippet
+
+
 #################
 #  logic class  #
 #################
@@ -454,7 +486,7 @@ namespace UnrealEngine.Game.UI
 		/// <summary>
 		/// 订阅事件
 		/// </summary>
-		private void AddEventListener()
+		public override void AddEventListener()
 		{
 			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , True)`
 		}
@@ -462,7 +494,7 @@ namespace UnrealEngine.Game.UI
 		/// <summary>
 		/// 取消订阅事件
 		/// </summary>
-		private void RemoveEventListener()
+		public override void RemoveEventListener()
 		{
 			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , False)`
 		}
@@ -474,6 +506,30 @@ endsnippet
 #############################
 #  ue4 actor class snippet  #
 #############################
+snippet u.class.normal "普通类" b
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+// 
+// 模块名：$2
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${2:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game${1:.NameSpace}
+{
+	public class ${2:`!p snip.rv = snip.basename`}
+	{
+		${0}		
+	}
+}
+endsnippet
+
+
+
 snippet u.class.actor "ue4 actor class" b
 #region 模块信息
 /*----------------------------------------------------------------
@@ -506,7 +562,7 @@ snippet u.class.util "util class" b
 // Copyright (C) `!v strftime("%Y")` gz，netease
 // 
 // u.class.widget.image.MyImage.button.MyButton.combo.MyCombo.check.MyCheckBox.text.MyText.progress.MyProgress.rich.MyRich.canvas.MyCanvas.overlay.Myoverlay.boxh.MyHBox.boxv.MyVBox.boxs.MySbox.switcher.MyWitcher.grid.MyGrid
-// 模块名：$1
+// 模块名：`!p snip.rv = snip.basename`
 // 创建者：caihedong
 // 创建日期：`!v strftime("%Y-%m-%d")`
 // 模块描述：${2:说明}
@@ -636,12 +692,33 @@ ${1:actor}.K2_DestroyActor();
 $0
 endsnippet
 
+################
+#  UI snippet  #
+################
+snippet ui.interface.show "显示主界面" b
+UIManager.Instance.ShowInterface<${1:`!p snip.rv = snip.basename`}>(${2:Params});
+$0
+endsnippet
 
+snippet ui.single.show "显示弹出式界面" b
+UIManager.Instance.ShowSingletonUI<${1:`!p snip.rv = snip.basename`}>(UILayer.Panel,${2:Params});
+$0
+endsnippet
+
+snippet ui.single.destroy "销毁主界面" b
+UIManager.Instance.DestroySingletonUILogic<${1:`!p snip.rv = snip.basename`}>();
+$0
+endsnippet
 ####################
 #  table snippets  #
 ####################
 
-snippet tbu "get from a user table" b
+snippet tbu.e "extract a user table" b
+var tbu`!p snip.rv = t[1].capitalize()` = ClientMgr.GClient.GameData.Tb_${1:student};
+$0
+endsnippet
+
+snippet tbu.get "get from a user table" b
 var tbu`!p snip.rv = t[1].capitalize()`Info = TableUtil.get_${1:student}(${2:id});
 if(tbu`!p snip.rv = t[1].capitalize()`Info != null)
 {
@@ -649,9 +726,11 @@ if(tbu`!p snip.rv = t[1].capitalize()`Info != null)
 }
 endsnippet
 
-snippet tb "get from a table" b
-var tb`!p snip.rv = t[1].capitalize()`CfgInfo = Tb_cfg_${1:character}.Get(${2:id});
+snippet tb.e "get from a table" b
+var tb`!p snip.rv = t[1].capitalize()`= Tb_cfg_${1:character}.All();
+$0
 endsnippet
+
 snippet tb.get "get from a table" b
 var tb`!p snip.rv = t[1].capitalize()`CfgInfo = Tb_cfg_${1:character}.Get(${2:id});
 $0

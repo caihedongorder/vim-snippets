@@ -184,7 +184,7 @@ endsnippet
 ############
 #     +    #
 ############
-snippet i "plus" i
+snippet i "plus" w
 +$0
 endsnippet
 
@@ -195,6 +195,14 @@ endsnippet
 snippet c "sub " i
 -$0
 endsnippet
+
+##################
+#  special sign  #
+##################
+snippet ai "Description" i
+<++++>
+endsnippet
+
 
 snippet "t(\d+)" "convert to \t" r
 `!p snip.rv = repeatString('\\t',int(match.group(1)))`

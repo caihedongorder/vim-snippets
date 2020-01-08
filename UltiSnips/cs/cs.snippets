@@ -795,6 +795,11 @@ snippet l.insert "insert an element to a list" b
 ${1:list}.Insert(${2:Index} , ${3:element});
 endsnippet
 
+snippet l.insert.range "insert a collection into a list" b
+${1:list}.InsertRange(${2:startIndex} , ${3:list2Insert});
+$0
+endsnippet
+
 snippet l.remove "remove an element" b
 ${1:list}.Remove(${2:element});
 $0
@@ -852,9 +857,95 @@ ${1:list}.Reverse();
 $0
 endsnippet
 
-snippet l.extend "insert a collection into a list" b
-${1:list}.InsertRange(${2:startIndex} , ${3:list2Insert});
+snippet "l.find.min.(\w+)" "find a min element" r
+// ${1:desc}
+var ${2:minValue} = `!p snip.rv = cs_gettype(match.group(1))`.MaxValue;
+var $2_Index = -1;
+for (var ${3:index} = 0; $3 < ${4:list}.Count ; $3++)
+{
+	var ${5:curElement} = $4[$3];
+	
+	var curEvalValue = ${6:<++++>} ;
+
+	if (curEvalValue < $2)
+	{
+		$2 = curEvalValue;
+		$2_Index = $3 ;
+	}
+}
+if ($2_Index != -1)
+{
+	var ${7:maxElement} = $4[ $2_Index ];
+	$8
+}
 $0
+endsnippet
+
+snippet "l.find.max.(\w+)" "find a min element" r
+// ${1:desc}
+var ${2:maxValue} = `!p snip.rv = cs_gettype(match.group(1))`.MinValue;
+var $2_Index = -1;
+for (var ${3:index} = 0; $3 < ${4:list}.Count ; $3++)
+{
+	var ${5:curElement} = $4[$3];
+	
+	var curEvalValue = ${6:<++++>} ;
+
+	if (curEvalValue > $2)
+	{
+		$2 = curEvalValue;
+		$2_Index = $3 ;
+	}
+}
+if ($2_Index != -1)
+{
+	var ${7:maxElement} = $4[ $2_Index ];
+	$8
+}
+$0
+endsnippet
+
+
+snippet l.find "find a element by predicate" b
+var ${1:result} = ${2:list}.Find( ( x ) => {
+	$0
+});
+endsnippet
+
+snippet l.findlast "find a element by predicate from end" b
+var ${1:result} = ${2:list}.FindLast( ( x ) => {
+	$0
+});
+endsnippet
+
+snippet l.findindex "find and index of a element by predicate" b
+var ${1:result} = ${2:list}.FindIndex( ( x ) => {
+	$0
+});
+endsnippet
+
+snippet l.findindex.range "find an index of a element by predicate in a range" b
+var ${1:result} = ${2:list}.FindIndex( ${3:startIndex} , ${4:count} , ( x ) => {
+	$0
+});
+endsnippet
+
+snippet l.findlastindex.range "find an index of a element by predicate from end in a range" b
+var ${1:result} = ${2:list}.FindLastIndex( ${3:startIndex} , ${4:count} , ( x ) => {
+	$0
+});
+endsnippet
+
+snippet l.binarysearch "binary search an element from a list" b
+var ${1:result} = ${2:list}.BinarySearch(${3:elelmentToSearch});
+$0
+endsnippet
+
+
+snippet l.findall "find a sub list by predicate" b
+var ${1:result} = ${2:list}.FindAll( ( x ) => {
+	$0
+});
 endsnippet
 
 #######################################################################
