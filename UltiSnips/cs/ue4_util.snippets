@@ -530,7 +530,7 @@ endsnippet
 
 
 
-snippet u.class.actor "ue4 actor class" b
+snippet uactor "ue4 actor class" b
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -548,6 +548,22 @@ namespace UnrealEngine.Game
 {
 	public class A${1:`!p snip.rv = snip.basename`} : AActor
 	{
+		[UE4Function(EFunctionFlags.FUNC_Common)]
+		public virtual void ReceiveBeginPlay()
+		{
+
+		}
+		[UE4Function(EFunctionFlags.FUNC_Common)]
+		void ReceiveEndPlay(EEndPlayReason.Type EndPlayReason)
+		{
+
+		}
+
+		//[UE4Function(EFunctionFlags.FUNC_Common)]
+		//void ReceiveTick(float DeltaSeconds)
+		//{
+		//
+		//}
 		${0}		
 	}
 }
@@ -595,7 +611,7 @@ using UnrealEngine.Game.Event;
 using UnrealEngine.Game.Scene;
 namespace UnrealEngine.Game
 {
-	public class A${1:`!p snip.rv = snip.basename`} : UUserWidget
+	public class U${1:`!p snip.rv = snip.basename`} : UUserWidget
 	{
 		`!p snip.rv = cs_generateAllWidgetsDefine( match.group(1) )`
 
@@ -658,9 +674,6 @@ snippet u.event.remove "RemoveEventListener" b
 EventDispatcher.RemoveEventListener(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
 endsnippet
 
-snippet u.statics.getplayerpawn "GetPlayerPawn" b
-${playPawn:1} = UGameplayStatics.GetPlayerPawn(${2:SceneManager.Instance.GameIns},0) as APlayerPawnBase;$0
-endsnippet
 
 snippet u.timer.ladd "增加局部定时器" b
 TimerHandle TH_${1:Name};
@@ -683,6 +696,21 @@ TimerMgr.Instance.AddSpecialTimer(${1:0.01f},()=>
 	$0
 });
 endsnippet
+
+snippet u.actor.playerpawn "GetPlayerPawn" b
+var ${1:playerpawn} = UGameplayStatics.GetPlayerPawn(${2:SceneManager.Instance.GameIns},0) as APlayerPawn${3:Base};
+$0
+endsnippet
+
+snippet u.actor.controller "GetPlayerController" b
+var ${1:playerController} = UGameplayStatics.GetPlayerController(${2:SceneManager.Instance.GameIns},0) as APlayerController${3:Base};
+$0
+endsnippet
+
+snippet u.actor.spawn "创建物件" b
+${1:actor}.K2_SetActorLocation(${2:loc},false,null,true);$0
+endsnippet
+
 snippet u.actor.setloc "设置物件位置" b
 ${1:actor}.K2_SetActorLocation(${2:loc},false,null,true);$0
 endsnippet
