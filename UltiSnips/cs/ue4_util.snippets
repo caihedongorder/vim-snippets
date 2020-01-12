@@ -514,7 +514,7 @@ snippet u.class.normal "普通类" b
 // 模块名：$2
 // 创建者：caihedong
 // 创建日期：`!v strftime("%Y-%m-%d")`
-// 模块描述：${2:说明}
+// 模块描述：${3:说明}
 //----------------------------------------------------------------*/
 #endregion
 using UnrealEngine.Game.Event;
@@ -529,6 +529,43 @@ namespace UnrealEngine.Game${1:.NameSpace}
 endsnippet
 
 
+#############################
+#  ue4 actor class snippet  #
+#############################
+snippet u.class.normal.logic "普通逻辑类" b
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+// 
+// 模块名：$2
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${3:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game${1:.NameSpace}
+{
+	public class ${2:`!p snip.rv = snip.basename`}
+	{
+		/// <summary>
+		/// 订阅事件
+		/// </summary>
+		public void AddEventListener()
+		{
+			${0}		
+		}
+
+		/// <summary>
+		/// 取消订阅事件
+		/// </summary>
+		public void RemoveEventListener()
+		{
+		}
+	}
+}
+endsnippet
 
 snippet uactor "ue4 actor class" b
 #region 模块信息
@@ -719,6 +756,31 @@ snippet u.actor.destroy "删除物件" b
 ${1:actor}.K2_DestroyActor();
 $0
 endsnippet
+
+snippet u.actor.event.beginplay "implement actor begin_play event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+public virtual void ReceiveBeginPlay()
+{
+	$0
+}
+endsnippet
+
+snippet u.actor.event.endplay "implement actor end_play event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void ReceiveEndPlay(EEndPlayReason.Type EndPlayReason)
+{
+	$0
+}
+endsnippet
+
+snippet u.actor.event.tick "implement actor tick event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void ReceiveTick(float DeltaSeconds)
+{
+	$0
+}
+endsnippet
+
 
 ################
 #  UI snippet  #
