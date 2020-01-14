@@ -772,11 +772,13 @@ endsnippet
 snippet l.for "for loop" b
 for (var ${1:iList} = 0; $1 < ${2:list}.Count ; $1++)
 {
-	var ${4:curElement} = $2[$1];
-	${3}	
+	var cur${3:Element} = $2[$1];
+	${4}	
 }
 $0
 endsnippet
+
+
 
 snippet l.foreach "for each" b
 foreach (var ${1:element} in ${2:list})
@@ -857,6 +859,18 @@ ${1:list}.Reverse();
 $0
 endsnippet
 
+snippet l.find "find a element by predicate" b
+var ${1:result} = ${2:list}.Find( ( x ) => {
+	$0
+});
+endsnippet
+
+snippet l.findall "find a sub list by predicate" b
+var ${1:result} = ${2:list}.FindAll( ( x ) => {
+	$0
+});
+endsnippet
+
 snippet "l.find.min.(\w+)" "find a min element" r
 // ${1:desc}
 var ${2:minValue} = `!p snip.rv = cs_gettype(match.group(1))`.MaxValue;
@@ -906,11 +920,6 @@ $0
 endsnippet
 
 
-snippet l.find "find a element by predicate" b
-var ${1:result} = ${2:list}.Find( ( x ) => {
-	$0
-});
-endsnippet
 
 snippet l.findlast "find a element by predicate from end" b
 var ${1:result} = ${2:list}.FindLast( ( x ) => {
@@ -942,11 +951,6 @@ $0
 endsnippet
 
 
-snippet l.findall "find a sub list by predicate" b
-var ${1:result} = ${2:list}.FindAll( ( x ) => {
-	$0
-});
-endsnippet
 
 #######################################################################
 #                            dict snippets                            #

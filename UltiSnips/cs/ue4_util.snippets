@@ -1,4 +1,6 @@
 
+priority 60
+
 #######################################################################
 #                          ue4 util snippets                          #
 #######################################################################
@@ -20,7 +22,7 @@ UELog.LogWarning(\$"${1}");${0}
 endsnippet
 
 snippet ctor "构造函数" b
-public ${2:`!p snip.rv = snip.basename`}(){
+public ${1:`!p snip.rv = snip.basename`}(${2:}){
 
 }
 endsnippet
@@ -427,6 +429,21 @@ snippet 'u.prop.(\w+)' "ue4 变量" r
 public `!p snip.rv = cs_gettype(match.group(1))` ${1:propName};
 endsnippet
 
+snippet u.prop "ue4 attribute" b
+[UE4Property(EPropertyFlags.CPF_Common)]
+endsnippet
+
+snippet u.function "ue4 function attribute" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+endsnippet
+
+#######################################################################
+#                         get client manager                          #
+#######################################################################
+snippet u.clientmgr "get client manager" i
+ClientMgr.GClient$0
+endsnippet
+
 #######################################################################
 #                            场景相关对象获取代码片段                 #
 #######################################################################
@@ -442,7 +459,7 @@ endsnippet
 
 snippet u.battle.scene.get "获取战斗场景中的物件" b
 var currentScene = SceneManager.Instance.CurrentScene;
-var ${1:entity} = currentScene.GetEntity<${2:T}>(${3:entityId}) as $2;
+var ${1:entity} = currentScene.GetEntity<${2:T}>(${3:entityId});
 $0
 endsnippet
 
@@ -467,6 +484,8 @@ snippet 'uilogic.([\w.]+)' "ue4 logic class" r
 // 模块描述：${3:说明}
 //----------------------------------------------------------------*/
 #endregion
+using System;
+using UnrealEngine.Game.UI;
 using UnrealEngine.Game.Event;
 using UnrealEngine.Game.Scene;
 namespace UnrealEngine.Game.UI
@@ -543,6 +562,8 @@ snippet u.class.normal.logic "普通逻辑类" b
 // 模块描述：${3:说明}
 //----------------------------------------------------------------*/
 #endregion
+using System;
+using UnrealEngine.Game.UI;
 using UnrealEngine.Game.Event;
 using UnrealEngine.Game.Scene;
 namespace UnrealEngine.Game${1:.NameSpace}
@@ -702,6 +723,15 @@ snippet "ui\.(\w+).def.(\w+)" "expand ui type" r
 `!p snip.rv = cs_generateWidgetEventCallBack( match.group(1) , match.group(2) )`
 endsnippet
 
+snippet u.event "AddEventListener" b
+EventDispatcher.AddEventListener${3:<${4:}>}(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
+EventDispatcher.RemoveEventListener$3($1.$2,On$1_$2);
+private void On$1_$2($4)
+{
+}
+$0
+endsnippet
+
 
 snippet u.event.add "AddEventListener" b
 EventDispatcher.AddEventListener(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
@@ -711,6 +741,9 @@ snippet u.event.remove "RemoveEventListener" b
 EventDispatcher.RemoveEventListener(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
 endsnippet
 
+snippet u.event.trigger "trigger a event" b
+EventDispatcher.TriggerEvent(${1:GameplayEvent}.${2:CameraBeginMove}${3:,});
+endsnippet
 
 snippet u.timer.ladd "增加局部定时器" b
 TimerHandle TH_${1:Name};
@@ -750,6 +783,21 @@ endsnippet
 
 snippet u.actor.setloc "设置物件位置" b
 ${1:actor}.K2_SetActorLocation(${2:loc},false,null,true);$0
+endsnippet
+
+snippet u.actor.getloc "get actor location" b
+var ${1:location} = ${2:actor}.K2_GetActorLocation();
+$0
+endsnippet
+
+snippet u.actor.all "get all actors from class" b
+var all${1:Actor}s = new TArray__AActor();
+UGameplayStatics.GetAllActorsOfClass(${2:worldContext}, new TSubclassOf__AActor( ${3: UObjectUtil.StaticClass<${4:actorClass}>() } ) , all$1 );
+for (var ${5:Index} = 0; $5 < all$1s.Num() ; $5++)
+{
+	var cur$1 = all$1[$5];
+	$0
+}
 endsnippet
 
 snippet u.actor.destroy "删除物件" b
