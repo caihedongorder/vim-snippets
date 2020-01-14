@@ -376,6 +376,21 @@ def cs_generateAllWidgetsInit( params ):
 		codestr += cs_generateWidgetInit( typeStr,valueStr )
 		paramIndex += 2
 	return codestr
+
+	#从prefix中提取变量 比如 TextBlock_Name = main.TextBlock_Name;
+def cs_ExtractWidges( prefix , params ):
+    # private UImage Image_TacticalPanelBg;
+	codestr = "\n"
+	paramsList = params.split( '.' )
+	paramCount = len( paramsList )
+	paramIndex = 0
+	while paramIndex + 1 < paramCount:
+		typeStr = paramsList[ paramIndex ]
+		valueStr = paramsList[ paramIndex+1 ]
+		varName = cs_GetWidgetGlobalVariableName( typeStr,valueStr )
+		codestr +=  '\t\t\t' + varName + '= ' + prefix + '.' + varName + ';\n'
+		paramIndex += 2
+	return codestr
 	#产生所有控件SetData代码
 def cs_generateAllWidgetsSetData( params ):
 	localInitCodeStr = "\n"
@@ -468,11 +483,11 @@ BattleScene_Util$0
 endsnippet
 
 
-#################
-#  logic class  #
-#################
+#######################################################################
+#                           ui logic class                            #
+#######################################################################
 
-snippet 'uilogic.([\w.]+)' "ue4 logic class" r
+snippet 'u.class.uilogic.([\w.]+)' "ue4 logic class" r
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -507,6 +522,7 @@ namespace UnrealEngine.Game.UI
 		/// </summary>
 		public override void AddEventListener()
 		{
+			base.AddEventListener();
 			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , True)`
 		}
 
@@ -515,6 +531,7 @@ namespace UnrealEngine.Game.UI
 		/// </summary>
 		public override void RemoveEventListener()
 		{
+			base.RemoveEventListener();
 			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , False)`
 		}
 		`!p snip.rv = cs_generateAllWidgetsEventFunctionBody( match.group(1) )`
@@ -522,9 +539,10 @@ namespace UnrealEngine.Game.UI
 }
 endsnippet
 
-#############################
-#  ue4 actor class snippet  #
-#############################
+#######################################################################
+#                            normal class                             #
+#######################################################################
+
 snippet u.class.normal "普通类" b
 #region 模块信息
 /*----------------------------------------------------------------
@@ -548,9 +566,67 @@ namespace UnrealEngine.Game${1:.NameSpace}
 endsnippet
 
 
-#############################
-#  ue4 actor class snippet  #
-#############################
+#######################################################################
+#                   ui normal logic class with main                   #
+#######################################################################
+
+
+snippet "u.class.normal.uilogic.([\w.]+)" "ue4 widget class" r
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+//
+// 模块名：$1
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${2:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game
+{
+	public class ${1:`!p snip.rv = snip.basename`} : UUserWidget
+	{
+		public $1(${2:ParentClass} main){
+			this.main = main;
+
+			`!p snip.rv = cs_ExtractWidges( 'main' , match.group(1) )`
+		}
+
+		private $2 main;
+
+		`!p snip.rv = cs_generateAllWidgetsDefine( match.group(1) )`
+
+		public void SetData()
+		{
+			`!p snip.rv = cs_generateAllWidgetsSetData( match.group(1) )`
+		}
+
+		/// <summary>
+		/// 订阅事件
+		/// </summary>
+		public void AddEventListener()
+		{
+			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , True)`
+		}
+
+		/// <summary>
+		/// 取消订阅事件
+		/// </summary>
+		public void RemoveEventListener()
+		{
+			`!p snip.rv = cs_generateAllWidgetsAddOrRemoveEventListener( match.group(1) , False)`
+		}
+		`!p snip.rv = cs_generateAllWidgetsEventFunctionBody( match.group(1) )`
+	}
+}
+endsnippet
+
+#######################################################################
+#                         normal logic class                          #
+#######################################################################
+
 snippet u.class.normal.logic "普通逻辑类" b
 #region 模块信息
 /*----------------------------------------------------------------
@@ -588,7 +664,11 @@ namespace UnrealEngine.Game${1:.NameSpace}
 }
 endsnippet
 
-snippet uactor "ue4 actor class" b
+#######################################################################
+#                           define a actor                            #
+#######################################################################
+
+snippet u.class.actor "ue4 actor class" b
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -627,34 +707,12 @@ namespace UnrealEngine.Game
 }
 endsnippet
 
-#######################################################################
-#                             Util Class                              #
-#######################################################################
-snippet u.class.util "util class" b
-#region 模块信息
-/*----------------------------------------------------------------
-// Copyright (C) `!v strftime("%Y")` gz，netease
-// 
-// u.class.widget.image.MyImage.button.MyButton.combo.MyCombo.check.MyCheckBox.text.MyText.progress.MyProgress.rich.MyRich.canvas.MyCanvas.overlay.Myoverlay.boxh.MyHBox.boxv.MyVBox.boxs.MySbox.switcher.MyWitcher.grid.MyGrid
-// 模块名：`!p snip.rv = snip.basename`
-// 创建者：caihedong
-// 创建日期：`!v strftime("%Y-%m-%d")`
-// 模块描述：${2:说明}
-//----------------------------------------------------------------*/
-#endregion
-using UnrealEngine.Game.Event;
-using UnrealEngine.Game.Scene;
-namespace UnrealEngine.Game.${1:Name}
-{
-	public class `!p snip.rv = snip.basename`
-	{
-		${0}		
-	}
-}
-endsnippet
 
+#######################################################################
+#                       uwidget class snippets                        #
+#######################################################################
 
-snippet "uwidget.([\w.]+)" "ue4 widget class" r
+snippet "u.class.widget.([\w.]+)" "ue4 widget class" r
 #region 模块信息
 /*----------------------------------------------------------------
 // Copyright (C) `!v strftime("%Y")` gz，netease
@@ -710,6 +768,31 @@ namespace UnrealEngine.Game
 }
 endsnippet
 
+#######################################################################
+#                             Util Class                              #
+#######################################################################
+snippet u.class.util "util class" b
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+// 
+// u.class.widget.image.MyImage.button.MyButton.combo.MyCombo.check.MyCheckBox.text.MyText.progress.MyProgress.rich.MyRich.canvas.MyCanvas.overlay.Myoverlay.boxh.MyHBox.boxv.MyVBox.boxs.MySbox.switcher.MyWitcher.grid.MyGrid
+// 模块名：`!p snip.rv = snip.basename`
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${2:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game.${1:Name}
+{
+	public class `!p snip.rv = snip.basename`
+	{
+		${0}		
+	}
+}
+endsnippet
 snippet "ui\.(\w+)" "expand ui type" r
 `!p snip.rv = cs_gettype( match.group(1) )`
 endsnippet
@@ -722,6 +805,16 @@ snippet "ui\.(\w+).def.(\w+)" "expand ui type" r
 `!p snip.rv = cs_generateWidgetAddOrRemoveEvent( match.group(1) , match.group(2) , False)`
 `!p snip.rv = cs_generateWidgetEventCallBack( match.group(1) , match.group(2) )`
 endsnippet
+
+snippet u.widget.function.setloc "set widget location" b
+if(${1:canvasPanel}.Slot is ${2:UCanvasPanel}Slot ${3:theSlot})
+{
+	$3.SetPosition(${4:Pos});
+}
+$0
+endsnippet
+
+
 
 snippet u.event "AddEventListener" b
 EventDispatcher.AddEventListener${3:<${4:}>}(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
