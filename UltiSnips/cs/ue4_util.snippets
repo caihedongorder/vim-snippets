@@ -10,15 +10,15 @@ priority 60
 #################
 
 snippet u.log "" b
-UELog.Log(\$"${1}");${0}
+UELog.Log(\$"`!p snip.rv = snip.basename`${1}");${0}
 endsnippet
 
 snippet u.loge "" b
-UELog.LogError(\$"${1}");${0}
+UELog.LogError(\$"`!p snip.rv = snip.basename`${1}");${0}
 endsnippet
 
 snippet u.logw "UELog." b
-UELog.LogWarning(\$"${1}");${0}
+UELog.LogWarning(\$"`!p snip.rv = snip.basename`${1}");${0}
 endsnippet
 
 snippet ctor "构造函数" b
@@ -566,6 +566,12 @@ namespace UnrealEngine.Game${1:.NameSpace}
 endsnippet
 
 
+snippet "uilogic.inject.(\w+).(\w+)" "inject a uilogic snippet" r
+`!p snip.rv = match.group(1)` `!p snip.rv = match.group(2)` = new `!p snip.rv = match.group(1)`(this);
+`!p snip.rv = match.group(2)`.AddEventListener();
+`!p snip.rv = match.group(2)`.RemoveEventListener();
+endsnippet
+
 #######################################################################
 #                   ui normal logic class with main                   #
 #######################################################################
@@ -582,11 +588,12 @@ snippet "u.class.normal.uilogic.([\w.]+)" "ue4 widget class" r
 // 模块描述：${2:说明}
 //----------------------------------------------------------------*/
 #endregion
+using UnrealEngine.Game.UI;
 using UnrealEngine.Game.Event;
 using UnrealEngine.Game.Scene;
 namespace UnrealEngine.Game
 {
-	public class ${1:`!p snip.rv = snip.basename`} : UUserWidget
+	public class ${1:`!p snip.rv = snip.basename`}
 	{
 		public $1(${2:ParentClass} main){
 			this.main = main;
@@ -723,6 +730,7 @@ snippet "u.class.widget.([\w.]+)" "ue4 widget class" r
 // 模块描述：${2:说明}
 //----------------------------------------------------------------*/
 #endregion
+using UnrealEngine.Game.UI;
 using UnrealEngine.Game.Event;
 using UnrealEngine.Game.Scene;
 namespace UnrealEngine.Game
@@ -797,13 +805,18 @@ snippet "ui\.(\w+)" "expand ui type" r
 `!p snip.rv = cs_gettype( match.group(1) )`
 endsnippet
 
-snippet "ui\.(\w+).def.(\w+)" "expand ui type" r
+snippet "ui\.(\w+).(\w+).def" "expand ui type" r
 `!p snip.rv = cs_generateWidgetDefine( match.group(1) , match.group(2) )`
+`!p snip.rv = cs_generateWidgetInit( match.group(1) , match.group(2) )`
 `!p snip.rv = cs_generateWidgetSetDataLocalVariable( match.group(1) , match.group(2) )`
 `!p snip.rv = cs_generateWidgetSetData( match.group(1) , match.group(2) )`
 `!p snip.rv = cs_generateWidgetAddOrRemoveEvent( match.group(1) , match.group(2) , True)`
 `!p snip.rv = cs_generateWidgetAddOrRemoveEvent( match.group(1) , match.group(2) , False)`
 `!p snip.rv = cs_generateWidgetEventCallBack( match.group(1) , match.group(2) )`
+endsnippet
+
+snippet "ui\.(\w+).(\w+).set" "expand ui type" r
+`!p snip.rv = cs_generateWidgetSetData( match.group(1) , match.group(2) )`
 endsnippet
 
 snippet u.widget.function.setloc "set widget location" b
@@ -814,7 +827,120 @@ if(${1:canvasPanel}.Slot is ${2:UCanvasPanel}Slot ${3:theSlot})
 $0
 endsnippet
 
+snippet u.widget.function.show "show widget" b
+${1:widget}SetVisibility(ESlateVisibility.SelfHitTestInvisible);
+$0
+endsnippet
 
+snippet u.widget.function.hide "hide widget" b
+${1:widget.}SetVisibility(ESlateVisibility.Collapsed);
+$0
+endsnippet
+
+snippet u.widget.event.mouse "mouse events" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+FEventReply OnMouseButtonDown(FGeometry MyGeometry,FPointerEvent MouseEvent)
+{
+	return UWidgetBlueprintLibrary.Unhandled(); 
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+FEventReply OnMouseButtonUp(FGeometry MyGeometry,FPointerEvent MouseEvent)
+{
+	return UWidgetBlueprintLibrary.Unhandled(); 
+}
+$0
+endsnippet
+
+snippet u.widget.event.mouse.down "mousedown event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+FEventReply OnMouseButtonDown(FGeometry MyGeometry,FPointerEvent MouseEvent)
+{
+	return UWidgetBlueprintLibrary.Unhandled(); 
+}
+$0
+endsnippet
+
+snippet u.widget.event.mouse.up "mouseup event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+FEventReply OnMouseButtonUp(FGeometry MyGeometry,FPointerEvent MouseEvent)
+{
+	return UWidgetBlueprintLibrary.Unhandled(); 
+}
+$0
+endsnippet
+
+snippet u.widget.event.touch "mouseup event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+FEventReply OnTouchStarted(FGeometry MyGeometry,FPointerEvent InTouchEvent)
+{
+	return UWidgetBlueprintLibrary.Unhandled(); 
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+FEventReply OnTouchEnded(FGeometry MyGeometry,FPointerEvent InTouchEvent)
+{
+	return UWidgetBlueprintLibrary.Unhandled(); 
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+FEventReply OnTouchMoved(FGeometry MyGeometry,FPointerEvent InTouchEvent)
+{
+	return UWidgetBlueprintLibrary.Unhandled(); 
+}
+$0
+endsnippet
+
+snippet u.widget.event.onpaint "onpaint event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void OnPaint(FPaintContext& Context)
+{
+	$0
+}
+endsnippet
+
+snippet u.widget.event.focus "on focus event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void OnRemovedFromFocusPath(FFocusEvent InFocusEvent)
+{
+	$0
+}
+endsnippet
+
+snippet u.widget.event.drag "drag event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void OnDragCancelled(FPointerEvent PointerEvent,UDragDropOperation Operation)
+{
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void OnDragDetected(FGeometry MyGeometry,FPointerEvent PointerEvent,out UDragDropOperation Operation)
+{
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void OnDragEnter(FGeometry MyGeometry,FPointerEvent PointerEvent,UDragDropOperation Operation)
+{
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void OnDragLeave(FPointerEvent PointerEvent,UDragDropOperation Operation)
+{
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+bool OnDragOver(FGeometry MyGeometry,FPointerEvent PointerEvent,UDragDropOperation Operation)
+{
+	return false;
+}
+[UE4Function(EFunctionFlags.FUNC_Common)]
+bool OnDrop(FGeometry MyGeometry,FPointerEvent PointerEvent,UDragDropOperation Operation)
+{
+	return false;
+}
+$0
+endsnippet
+
+snippet u.widget.event.tick "tick event" b
+[UE4Function(EFunctionFlags.FUNC_Common)]
+void Tick(FGeometry MyGeometry,float InDeltaTime)
+{
+	$0
+}
+endsnippet
 
 snippet u.event "AddEventListener" b
 EventDispatcher.AddEventListener${3:<${4:}>}(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
@@ -834,7 +960,7 @@ snippet u.event.remove "RemoveEventListener" b
 EventDispatcher.RemoveEventListener(${1:GameplayEvent}.${2:CameraBeginMove},On$1_$2);
 endsnippet
 
-snippet u.event.trigger "trigger a event" b
+snippet u.event.trigger "trigger a event" 
 EventDispatcher.TriggerEvent(${1:GameplayEvent}.${2:CameraBeginMove}${3:,});
 endsnippet
 
