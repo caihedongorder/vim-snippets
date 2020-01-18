@@ -527,7 +527,7 @@ endsnippet
 #  function snippets  #
 #######################
 
-snippet "\bf([pri]?)\.([a-zA-Z_.]+)\b" "" r
+snippet "\bf([pri]?)\.([\w\d\.]+)\b" "" r
 `!p snip.rv = cs_getAccessString(match.group(1))` `!p snip.rv = cs_getFuncParams( match.group(2) )`
 {
 	${1}

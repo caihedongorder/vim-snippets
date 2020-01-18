@@ -467,6 +467,27 @@ snippet u.battle.team "战斗场景中 队伍管理类" w
 var teamMgr = SceneManager.Instance.CurrentScene.TeamManager as TeamManagerInBattleScene;
 $0
 endsnippet
+
+snippet u.battle.team.get "战斗场景中 队伍获取队伍" w
+var teamMgr = SceneManager.Instance.CurrentScene.TeamManager as TeamManagerInBattleScene;
+var teamEntity = teamMgr.FindTeam(${1:teamEntityId});
+$0
+endsnippet
+snippet u.battle.team.allmember "战斗场景中 队伍遍历所有队员" w
+var teamMgr = SceneManager.Instance.CurrentScene.TeamManager as TeamManagerInBattleScene;
+var teamEntity = teamMgr.FindTeam(${1:teamEntityId});
+if( teamEntity != null)
+{
+	for (var iCharacter = 0; iCharacter < teamEntity.Formation.AllMemberGuids.Count ; iCharacter++)
+	{
+		var curCharacterEntityId = teamEntity.Formation.AllMemberGuids[iCharacter];
+		var battleScene = SceneManager.Instance.CurrentScene;
+		var characterEntity = battleScene.GetEntity<CharacterEntity>(curCharacterEntityId);
+		$0
+	}
+}
+endsnippet
+
 snippet u.battle.scene "战斗场景中 战斗场景实例" w
 var battleScene = SceneManager.Instance.CurrentScene as BattleScene;
 $0
@@ -671,6 +692,31 @@ namespace UnrealEngine.Game${1:.NameSpace}
 }
 endsnippet
 
+#######################################################################
+#                          define a uobject                           #
+#######################################################################
+
+snippet u.class.object "ue4 uobject class" b
+#region 模块信息
+/*----------------------------------------------------------------
+// Copyright (C) `!v strftime("%Y")` gz，netease
+// 
+// 模块名：$1
+// 创建者：caihedong
+// 创建日期：`!v strftime("%Y-%m-%d")`
+// 模块描述：${2:说明}
+//----------------------------------------------------------------*/
+#endregion
+using UnrealEngine.Game.Event;
+using UnrealEngine.Game.Scene;
+namespace UnrealEngine.Game
+{
+	public class U${1:`!p snip.rv = snip.basename`} : UObject
+	{
+		${0}		
+	}
+}
+endsnippet
 #######################################################################
 #                           define a actor                            #
 #######################################################################
@@ -889,8 +935,9 @@ $0
 endsnippet
 
 snippet u.widget.event.onpaint "onpaint event" b
+this.bHasScriptImplementedPaint= true;
 [UE4Function(EFunctionFlags.FUNC_Common)]
-void OnPaint(FPaintContext& Context)
+void OnPaint(FPaintContext Context)
 {
 	$0
 }
@@ -935,6 +982,7 @@ $0
 endsnippet
 
 snippet u.widget.event.tick "tick event" b
+this.bHasScriptImplementedTick = true;
 [UE4Function(EFunctionFlags.FUNC_Common)]
 void Tick(FGeometry MyGeometry,float InDeltaTime)
 {
@@ -997,7 +1045,7 @@ $0
 endsnippet
 
 snippet u.actor.spawn "创建物件" b
-${1:actor}.K2_SetActorLocation(${2:loc},false,null,true);$0
+${1:actor} = UObjectUtil.SpawnActorNoFail<${2:AActor}>(${3:world} , ${4:class});
 endsnippet
 
 snippet u.actor.setloc "设置物件位置" b
@@ -1007,6 +1055,13 @@ endsnippet
 snippet u.actor.getloc "get actor location" b
 var ${1:location} = ${2:actor}.K2_GetActorLocation();
 $0
+endsnippet
+
+snippet u.actor.attach.actor "创建物件" b
+${1:actor}.K2_AttachToActor(${2:parentActor},
+		GlobalConstValue.NAME_None,
+		EAttachmentRule.SnapToTarget,EAttachmentRule.SnapToTarget,EAttachmentRule.SnapToTarget,false
+		);
 endsnippet
 
 snippet u.actor.all "get all actors from class" b
