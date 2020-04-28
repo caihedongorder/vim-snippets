@@ -487,13 +487,12 @@ if( teamEntity != null)
 	}
 }
 endsnippet
-
 snippet u.battle.scene "战斗场景中 战斗场景实例" w
 var battleScene = SceneManager.Instance.CurrentScene as BattleScene;
 $0
 endsnippet
 
-snippet u.battle.scene.get "获取战斗场景中的物件" b
+snippet u.battle.entity.get "获取战斗场景中的物件" b
 var currentScene = SceneManager.Instance.CurrentScene;
 var ${1:entity} = currentScene.GetEntity<${2:T}>(${3:entityId});
 $0
@@ -847,11 +846,11 @@ namespace UnrealEngine.Game.${1:Name}
 	}
 }
 endsnippet
-snippet "ui\.(\w+)" "expand ui type" r
+snippet "u\.widget\.(\w+)" "expand ui type" r
 `!p snip.rv = cs_gettype( match.group(1) )`
 endsnippet
 
-snippet "ui\.(\w+).(\w+).def" "expand ui type" r
+snippet "u\.widget\.(\w+).(\w+).def" "expand ui type" r
 `!p snip.rv = cs_generateWidgetDefine( match.group(1) , match.group(2) )`
 `!p snip.rv = cs_generateWidgetInit( match.group(1) , match.group(2) )`
 `!p snip.rv = cs_generateWidgetSetDataLocalVariable( match.group(1) , match.group(2) )`
@@ -861,7 +860,7 @@ snippet "ui\.(\w+).(\w+).def" "expand ui type" r
 `!p snip.rv = cs_generateWidgetEventCallBack( match.group(1) , match.group(2) )`
 endsnippet
 
-snippet "ui\.(\w+).(\w+).set" "expand ui type" r
+snippet "u\.widget\.(\w+).(\w+).set" "expand ui type" r
 `!p snip.rv = cs_generateWidgetSetData( match.group(1) , match.group(2) )`
 endsnippet
 
@@ -1032,6 +1031,14 @@ TimerMgr.Instance.AddSpecialTimer(${1:0.01f},()=>
 {
 	$0
 });
+endsnippet
+
+snippet u.timer.remove "移除定时器" b
+if (TH_${1:TimerHandle} != null)
+{
+	TimerMgr.Instance.RemoveTimer(TH_$1);
+	TH_$1 = null;
+}
 endsnippet
 
 snippet u.actor.playerpawn "GetPlayerPawn" b

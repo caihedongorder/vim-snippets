@@ -962,7 +962,7 @@ endsnippet
 
 
 snippet "d.def.new.([\w]+).([\w]+)" "define a dict and new" r
-Dictionary<`!p snip.rv = cs_gettype(match.group(1))`, `!p snip.rv = cs_gettype(match.group(2))`> ${3:varName} = new Dictionary<`!p snip.rv = cs_gettype(match.group(1))`, `!p snip.rv = cs_gettype(match.group(2))`>;
+Dictionary<`!p snip.rv = cs_gettype(match.group(1))`, `!p snip.rv = cs_gettype(match.group(2))`> ${3:varName} = new Dictionary<`!p snip.rv = cs_gettype(match.group(1))`, `!p snip.rv = cs_gettype(match.group(2))`>();
 $0
 endsnippet
 
@@ -1035,7 +1035,6 @@ foreach (var ${8:element2Remove} in $2)
 }
 $0
 endsnippet
-
 
 # public int propName { get; set; } 
 # public byte propName { get; set; }

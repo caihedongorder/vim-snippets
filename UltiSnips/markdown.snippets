@@ -55,28 +55,33 @@ endglobal
 ###########################
 # Sections and Paragraphs #
 ###########################
-snippet sec "Section" b
-# ${1:Section Name} #
+snippet t1 "Section" b
+# ${1:Title Name} #
 $0
 endsnippet
 
-snippet ssec "Sub Section" b
-## ${1:Section Name} ##
+snippet t2 "Sub Section" b
+## ${1:Title Name} ##
 $0
 endsnippet
 
-snippet sssec "SubSub Section" b
-### ${1:Section Name} ###
+snippet t3 "SubSub Section" b
+### ${1:Title Name} ###
 $0
 endsnippet
 
-snippet par "Paragraph" b
-#### ${1:Paragraph Name} ####
+snippet t4 "SubSub Section" b
+#### ${1:Title Name} ####
 $0
 endsnippet
 
-snippet spar "Paragraph" b
-##### ${1:Paragraph Name} #####
+snippet t5 "SubSub Section" b
+##### ${1:Title Name} #####
+$0
+endsnippet
+
+snippet t6 "SubSub Section" b
+###### ${1:Title Name} ######
 $0
 endsnippet
 
@@ -84,18 +89,43 @@ endsnippet
 # Text formatting #
 ###################
 
-snippet * "italics"
+snippet i "italics" i
 *${1:${VISUAL}}*$0
 endsnippet
 
-snippet ** "bold"
+snippet b "bold" i
 **${1:${VISUAL}}**$0
 endsnippet
 
-snippet *** "bold italics"
+snippet bi "bold italics" i
 ***${1:${VISUAL}}***$0
 endsnippet
 
+snippet ib "bold italics" i
+***${1:${VISUAL}}***$0
+endsnippet
+
+snippet cr "bold italics" i
+<br>
+endsnippet
+
+snippet delete "deleted line" i
+~~${1:some text to delete}~~$0
+endsnippet
+
+snippet line "separated line" b
+---------------------------------
+$0
+endsnippet
+
+snippet l "create a list" b
++ ${1:list content} $0
+endsnippet
+
+snippet toc "create toc" b
+[toc]
+$0
+endsnippet
 
 ################
 # Common stuff #
@@ -104,17 +134,19 @@ snippet link "Link to something"
 [${1:${VISUAL:Text}}](${3:http://${2:www.url.com}})$0
 endsnippet
 
-snippet img "Image"
+
+snippet image "Image"
 ![${1:pic alt}](${2:path}${3/.+/ "/}${3:opt title}${3/.+/"/})$0
 endsnippet
 
-snippet ilc "Inline Code" i
+
+snippet inline.code "Inline Code" i
 \`$1\`$0
 endsnippet
 
-snippet cbl "Codeblock" b
-\`\`\`
-$1
+snippet code "Codeblock" b
+\`\`\`${1:python}
+$2
 \`\`\`
 $0
 endsnippet
