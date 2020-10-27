@@ -10,7 +10,7 @@ priority 60
 #################
 
 snippet u.log "" b
-UELog.Log(\$"`!p snip.rv = snip.basename`${1}");${0}
+UELog.Log(UELog.ELogChannel.Battle,()=>\$"`!p snip.rv = snip.basename`${1}");${0}
 endsnippet
 
 snippet u.loge "" b
@@ -77,6 +77,15 @@ dict_typeInfo = {
 	'text' :
 		{
 			'Prefix' : 'TextBlock_',
+			'events' : '',
+			'events_params' : '',
+			'events_returnValues' : '',
+			'need_set' : True,
+			'set_api' : 'SetText', # 如果有设置set_api 就会简单生成Set方法,否则需要手动生成set的代码
+		},
+	'textex' :
+		{
+			'Prefix' : 'TextBlockEx_',
 			'events' : '',
 			'events_params' : '',
 			'events_returnValues' : '',
@@ -520,6 +529,7 @@ snippet 'u.class.uilogic.([\w.]+)' "ue4 logic class" r
 //----------------------------------------------------------------*/
 #endregion
 using System;
+using UnrealEngine.Game;
 using UnrealEngine.Game.UI;
 using UnrealEngine.Game.Event;
 using UnrealEngine.Game.Scene;
@@ -784,15 +794,13 @@ namespace UnrealEngine.Game
 	{
 		`!p snip.rv = cs_generateAllWidgetsDefine( match.group(1) )`
 
-		[UE4Function( EFunctionFlags.FUNC_Common )]
-		void Construct()
+		protected override void Construct()
 		{
 			`!p snip.rv = cs_generateAllWidgetsInit( match.group(1) )`
 
 			AddEventListener();
 		}
-		[UE4Function( EFunctionFlags.FUNC_Common )]
-		void Destruct()
+		protected override void Destruct()
 		{
 			RemoveEventListener();	
 		}
